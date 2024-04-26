@@ -7,11 +7,13 @@ public class Grid
     private int width;
     private int height;
     private int[,] gridArray;
+    private float cellSize;
 
-    public Grid(int width, int height)
+    public Grid(int width, int height, float cellSize)
     {
         this.width = width;
         this.height = height;
+        this.cellSize = cellSize;
 
         gridArray = new int[width, height];
 
@@ -19,9 +21,20 @@ public class Grid
         {
             for (int y = 0; y < gridArray.GetLength(1); y++)
             {
-                Helpers.CreateTextObject(null, gridArray[x, y].ToString(), new Vector3(x, y), 12, Color.white, TextAnchor.MiddleCenter, TextAlignment.Center, 1);
-                Debug.Log("Grid created with width: " + width + " and height: " + height);
+                // creates numbers in the grid for labels
+                Helpers.CreateTextObject(gridArray[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 20, Color.white, TextAnchor.MiddleCenter);
+                // draws a line around the cell
+                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
+                Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x +1, y), Color.white, 100f);
             }
         }
+        
+        // draws a line around the whole grid area
+        Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
+        Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
+    }
+    private Vector3 GetWorldPosition(int x, int y)
+    {
+        return new Vector3(x, y) * cellSize;
     }
 }
