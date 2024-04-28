@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 0
   Layout: 0
-  GrassPrefab: {fileID: 1059690786186993096, guid: 5b5a3625f14043148b02fae4f1b35b9d,
+  GrassPrefab: {fileID: 3513434172972132052, guid: 5b5a3625f14043148b02fae4f1b35b9d,
     type: 3}
-  ForestPrefab: {fileID: 3667734741704410519, guid: 78c713eed601b384b82c99ab3a859e22,
+  ForestPrefab: {fileID: 905390326975331979, guid: 78c713eed601b384b82c99ab3a859e22,
     type: 3}
   CellSize: {x: 20, y: 10, z: 0}
   GridSwizzle: 1

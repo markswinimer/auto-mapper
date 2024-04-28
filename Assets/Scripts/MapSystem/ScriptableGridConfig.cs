@@ -10,7 +10,7 @@ public class ScriptableGridConfig : ScriptableObject
     public GridType Type;
     [Space(10)]
     public GridLayout.CellLayout Layout;
-    public MapNodeBase GrassPrefab, ForestPrefab;
+    public Node GrassPrefab, ForestPrefab;
     public Vector3 CellSize;
     public GridLayout.CellSwizzle GridSwizzle;
 }
