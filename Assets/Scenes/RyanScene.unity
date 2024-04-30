@@ -241,7 +241,7 @@ GameObject:
   - component: {fileID: 372986068}
   - component: {fileID: 372986069}
   m_Layer: 0
-  m_Name: TargetLocator
+  m_Name: BattleController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 915992171}
   - component: {fileID: 915992172}
   m_Layer: 0
-  m_Name: BattleController
+  m_Name: BattlePhaseController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
