@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2e9b62d103a43e458d16eb2a73e17d9, type: 3}
+  m_Name: New Map Layout
+  m_EditorClassIdentifier: 
+  MapSize: {x: 5, y: 5}
+  RoomTileSize: {x: 20, y: 10, z: 1}
+  mapRooms:
+  - roomAmount: 10
+    roomType: 0
+    roomPrefabs:
+    - {fileID: 1895855019164105145, guid: 8cf7f0a63d431a24988cb7a9e900424e, type: 3}
+    - {fileID: 1895855019164105145, guid: 78c713eed601b384b82c99ab3a859e22, type: 3}
+  - roomAmount: 9
+    roomType: 2
+    roomPrefabs:
+    - {fileID: 2746562931161457126, guid: 5b5a3625f14043148b02fae4f1b35b9d, type: 3}
+    - {fileID: 1895855019164105145, guid: d31fd274d54b1394b82e7b7f1901e19d, type: 3}
+  - roomAmount: 1
+    roomType: 1
+    roomPrefabs:
+    - {fileID: 2746562931161457126, guid: 5b5a3625f14043148b02fae4f1b35b9d, type: 3}
