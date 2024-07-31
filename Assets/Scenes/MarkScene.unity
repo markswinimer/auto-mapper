@@ -637,7 +637,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1673216834}
   - component: {fileID: 1673216835}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: MousePosition3D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -674,7 +674,10 @@ MonoBehaviour:
   mainCamera: {fileID: 1870888113}
   mouseColliderLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
+  mouseObjectLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1708852687 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5403875548817810410, guid: 6c7b5894c3aa7da4b99e6b00045fbe99,
@@ -848,7 +851,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870888111}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.4132163, y: -0.000000015668697, z: 0.000000007109957, w: 0.9106329}
+  m_LocalRotation: {x: 0.4132163, y: 0.000000015668697, z: -0.0000000071099566, w: 0.9106329}
   m_LocalPosition: {x: 0, y: 80, z: -70}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1047,12 +1050,12 @@ PrefabInstance:
     - target: {fileID: 1321146131751855120, guid: 0c5f0ada8244499409095cd88421feeb,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000015668697
+      value: 0.000000015668697
       objectReference: {fileID: 0}
     - target: {fileID: 1321146131751855120, guid: 0c5f0ada8244499409095cd88421feeb,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.000000007109957
+      value: -0.0000000071099566
       objectReference: {fileID: 0}
     - target: {fileID: 1321146131751855120, guid: 0c5f0ada8244499409095cd88421feeb,
         type: 3}

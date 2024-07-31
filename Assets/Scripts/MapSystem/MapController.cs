@@ -162,8 +162,16 @@ public class MapController : MonoBehaviour
 
     public Room GetRoomAt(Vector3Int coordinates)
     {
+        foreach (var roomEntry in rooms)
+        {
+            Vector3Int roomCoords = roomEntry.Key;
+            Room roomy = roomEntry.Value;
+            Debug.Log("Room at " + roomCoords + ": " + roomy);
+        }
         if (rooms.TryGetValue(coordinates, out Room room))
         {
+        Debug.Log("found at coords: " + coordinates);
+        Debug.Log("FOUND ROOM: " + room);
             return room;
         }
         else

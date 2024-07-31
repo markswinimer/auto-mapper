@@ -24,24 +24,23 @@ namespace MapPlayer
         {
             if (gameState == GameState.ChoosingTile && Input.GetMouseButtonDown(0))
             {
-                Vector2Int clickedTile = GetClickedTile();
-                if (clickedTile != null && IsMoveValid(clickedTile))
+                GameObject clickedObject = MousePosition3D.GetMouseHitObject();
+                if (clickedObject != null)
                 {
-                    MovePlayer(clickedTile);
-                    gameState = GameState.CompletingEvent;
-                    StartEventOnTile(clickedTile);
+                    Room clickedRoom = clickedObject.GetComponentInParent<Room>();
+                    if (clickedRoom != null)
+                    {
+                        Vector2Int clickedTile = new Vector2Int(clickedRoom.mapCoords.x, clickedRoom.mapCoords.y);
+                        Debug.Log("Clicked tile position: " + clickedTile); // Log the clicked tile coordinates
+                        if (IsMoveValid(clickedTile))
+                        {
+                            MovePlayer(clickedTile);
+                            gameState = GameState.CompletingEvent;
+                            StartEventOnTile(clickedTile);
+                        }
+                    }
                 }
             }
-        }
-
-        Vector2Int GetClickedTile()
-        {
-            // Implement logic to convert mouse click position to tile coordinates
-            // This can involve raycasting from the camera to the clicked position
-            // For simplicity, let's assume we get the tile position directly here
-            Vector3 worldPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridPosition = mapController.GetGridPosition(worldPoint);
-            return new Vector2Int(gridPosition.x, gridPosition.y);
         }
 
         public void MovePlayer(Vector2Int newPosition)
@@ -57,6 +56,7 @@ namespace MapPlayer
         bool IsMoveValid(Vector2Int newPosition)
         {
             // Validate the move by checking if the room exists and is visitable
+            // im not sure why im checking in vector3 still. only x,z matters. try to simplify?
             Room newRoom = mapController.GetRoomAt(new Vector3Int(newPosition.x, newPosition.y, 0));
             return newRoom != null && newRoom.roomState == RoomState.CanVisit;
         }
@@ -102,7 +102,6 @@ namespace MapPlayer
         void StartEventOnTile(Vector2Int tilePosition)
         {
             // Start the event associated with the tile
-            // This could be a battle, puzzle, etc.
             Debug.Log("Event started on tile: " + tilePosition);
             // Simulate event completion
             StartCoroutine(CompleteEventAfterDelay(2.0f)); // Replace with actual event logic
