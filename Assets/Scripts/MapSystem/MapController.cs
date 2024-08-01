@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(RoomCreator))]
 public class MapController : MonoBehaviour
@@ -10,17 +11,23 @@ public class MapController : MonoBehaviour
     [SerializeField] private MapLayout startingMapLayout;
     [SerializeField] private MapCamera mapCamera;
     [SerializeField] private Map map;
+    [SerializeField] private UIDocument uiDocument;
+    [SerializeField] private string spriteSheetName;
+
 
     private Grid _grid;
     private RoomCreator roomCreator;
     private Dictionary<string, GameObject[]> prefabDictionary;
     private Dictionary<Vector3Int, Room> rooms;
+    private VisualElement iconContainer;
 
     private void Awake()
     {
         SetDependencies();
         InitializePrefabDictionary();
         ConfigMapCamera();
+
+        iconContainer = uiDocument.rootVisualElement.Q<VisualElement>("IconContainer");
     }
 
     private void SetDependencies()
@@ -38,7 +45,6 @@ public class MapController : MonoBehaviour
     {
         float width = startingMapLayout.MapSize.x * startingMapLayout.RoomTileSize.x;
         float height = startingMapLayout.MapSize.y * startingMapLayout.RoomTileSize.y;
-        mapCamera.SetCameraTargetPosition(width, height);
     }
 
     private void Start()
@@ -158,7 +164,30 @@ public class MapController : MonoBehaviour
         newRoom.SetData(coords, roomType, roomState, selectedPrefab, map);
 
         rooms.Add(coords, newRoom);
+
+        AddIconAboveRoom(newRoom);
     }
+
+    private void AddIconAboveRoom(Room room)
+    {
+        // Create a new VisualElement for the icon
+        VisualElement icon = new VisualElement();
+        icon.AddToClassList("icon-style"); // Assuming you have a class in your USS for the icon style
+
+        // Add the icon to the iconContainer
+        iconContainer.Add(icon);
+
+        // Convert the room's world position to screen position
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(room.transform.position);
+
+        // Set the icon's position in the UI
+        icon.style.left = screenPos.x;
+        icon.style.top = Screen.height - screenPos.y; // UI coordinates have (0,0) at top left
+
+        // Optional: Store reference to the icon in the room object if you need to update it later
+        // room.SetIcon(icon);
+    }
+
 
     public Room GetRoomAt(Vector3Int coordinates)
     {
@@ -170,8 +199,8 @@ public class MapController : MonoBehaviour
         }
         if (rooms.TryGetValue(coordinates, out Room room))
         {
-        Debug.Log("found at coords: " + coordinates);
-        Debug.Log("FOUND ROOM: " + room);
+            Debug.Log("found at coords: " + coordinates);
+            Debug.Log("FOUND ROOM: " + room);
             return room;
         }
         else
