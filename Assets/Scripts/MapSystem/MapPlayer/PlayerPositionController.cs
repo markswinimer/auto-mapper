@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace MapPlayer
 {
@@ -11,6 +12,9 @@ namespace MapPlayer
         private GameObject playerInstance;
         public Vector2Int currentPlayerPosition;
         public GameState gameState = GameState.ChoosingTile;
+        [SerializeField] private UIDocument uiDocument; // Reference to the specific UIDocument
+        private UI ui;
+
 
         void Start()
         {
@@ -18,6 +22,14 @@ namespace MapPlayer
             currentPlayerPosition = new Vector2Int(0, 0);
             SpawnPlayerAtPosition(currentPlayerPosition);
             UpdateTileStates();
+            if (uiDocument != null)
+            {
+                ui = uiDocument.GetComponent<UI>();
+            }
+            else
+            {
+                Debug.LogError("UIDocument is not assigned!");
+            }
         }
 
         void Update()
@@ -101,6 +113,7 @@ namespace MapPlayer
 
         void StartEventOnTile(Vector2Int tilePosition)
         {
+            ui.UpdateMapLog("Event started on tile: " + tilePosition);
             // Start the event associated with the tile
             Debug.Log("Event started on tile: " + tilePosition);
             // Simulate event completion
