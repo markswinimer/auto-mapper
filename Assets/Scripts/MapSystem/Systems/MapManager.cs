@@ -1,45 +1,51 @@
-// using System;
-// using System.Collections;
-// using System.Collections.Generic;
-// using System.Linq;
-// using UnityEngine;
-// using UnityEngine.UIElements;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UIElements;
 
-// [RequireComponent(typeof(RoomCreator))]
-// public class MapController : MonoBehaviour
-// {
-//     [SerializeField] private MapLayout startingMapLayout;
-//     [SerializeField] private MapCamera mapCamera;
-//     [SerializeField] private Map map;
-//     [SerializeField] private UIDocument uiDocument;
-//     [SerializeField] private string spriteSheetName;
+[RequireComponent(typeof(RoomCreator))]
+public class MapManager : MonoBehaviour
+{
+    [SerializeField] private MapCamera mapCamera;
+    [SerializeField] private UIDocument uiDocument;
+    [SerializeField] private string spriteSheetName;
+    [SerializeField] private MapGenerator mapGenerator;
 
+    private Dictionary<string, GameObject[]> prefabDictionary;
+    private Dictionary<Vector3Int, Room> rooms;
+    private Map map;
 
-//     private Grid _grid;
-//     private RoomCreator roomCreator;
-//     private Dictionary<string, GameObject[]> prefabDictionary;
-//     private Dictionary<Vector3Int, Room> rooms;
-//     private VisualElement iconContainer;
+    private void Awake()
+    {
+        Map existingMap = FindObjectOfType<Map>();
 
-//     private void Awake()
-//     {
-//         SetDependencies();
-//         InitializePrefabDictionary();
-//         ConfigMapCamera();
+        if (existingMap == null)
+        {
+            mapGenerator.GenerateMap();
+        } 
+        else
+        {
+            // need to create
+            // mapLoader.LoadMap();
+        } 
 
-//         iconContainer = uiDocument.rootVisualElement.Q<VisualElement>("IconContainer");
-//     }
+        // SetDependencies();
+        // InitializePrefabDictionary();
+        // ConfigMapCamera();
+    }
 
-//     private void SetDependencies()
-//     {
-//         _grid = map.GetComponent<Grid>();
-//         roomCreator = GetComponent<RoomCreator>();
-//     }
+    private void SetDependencies()
+    {
+        // _grid = map.GetComponent<Grid>();
+        // roomCreator = GetComponent<RoomCreator>();
+    }
 
-//     private void InitializePrefabDictionary()
-//     {
-//         prefabDictionary = new Dictionary<string, GameObject[]>();
-//     }
+    private void InitializePrefabDictionary()
+    {
+        prefabDictionary = new Dictionary<string, GameObject[]>();
+    }
 
 //     private void ConfigMapCamera()
 //     {
@@ -224,4 +230,4 @@
 //     {
 //         return _grid.WorldToCell(worldPosition);
 //     }
-// }
+}

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Scriptable Objects/Map/Layout")]
-public class MapLayout : ScriptableObject
+public class MapGenerationData : ScriptableObject
 {
 
-    [SerializeField] public Vector2Int MapSize;
-    [SerializeField] public Vector3 RoomTileSize;
+    public Vector3Int MapSize;
+    public Vector3Int RoomTileSize;
 
     [Serializable]
     private class MapRoomSetup

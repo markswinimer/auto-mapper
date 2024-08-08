@@ -6,7 +6,6 @@ public class Map : MonoBehaviour {
     public void Awake()
     {
         _grid = GetComponent<Grid>();
-        
     }
     public Vector3 GetPositionFromCoords(Vector3Int coords)
     {

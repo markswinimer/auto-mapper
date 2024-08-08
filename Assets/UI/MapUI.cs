@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 
 public class UI : MonoBehaviour
 {
-    public MapController mapcontroller;
+    // public MapController mapcontroller;
     private Label mapLog;
 
     private void OnEnable()
