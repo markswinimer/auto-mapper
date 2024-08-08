@@ -10,6 +10,18 @@ public class PlaceableObject : MonoBehaviour
 	public Vector3Int Size { get; private set; }
 	private Vector3[] _vertices;
 	
+	private void Start() 
+	{
+		GetColliderVertexPositionsLocal();
+		CalculateSizeInCells();	
+		var drag = GetComponent<ObjectDrag>();
+		if(drag == null)
+		{
+			//preplaced combatant, set placed
+			Placed = true;
+		}
+	}
+	
 	private void GetColliderVertexPositionsLocal()
 	{
 		var boxCollider = GetComponent<BoxCollider>();
@@ -37,12 +49,6 @@ public class PlaceableObject : MonoBehaviour
 	public Vector3 GetStartPosition()
 	{
 		return transform.TransformPoint(_vertices[0]);
-	}
-	
-	private void Start() 
-	{
-		GetColliderVertexPositionsLocal();
-		CalculateSizeInCells();	
 	}
 	
 	public virtual void Place()

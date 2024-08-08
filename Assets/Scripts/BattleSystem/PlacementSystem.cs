@@ -14,10 +14,12 @@ public class PlacementSystem : MonoBehaviour
 	public GameObject Unit;
 
 	private PlaceableObject _objectToPlace;
+	private float _tileSize;
+	private static bool _isLocked; 
 	// Start is called before the first frame update
 	void Start()
 	{
-		
+		_tileSize = Grid.cellSize.x * Grid.cellSize.y / 2;
 	}
 
 	// Update is called once per frame
@@ -32,11 +34,11 @@ public class PlacementSystem : MonoBehaviour
 		
 		if(Input.GetKeyDown(KeyCode.Space))
 		{
-			if(CanBePlaced(_objectToPlace))
+			if(CanClaimTargetArea_Instance(_objectToPlace.GetStartPosition(), _objectToPlace.Size))
 			{
 				_objectToPlace.Place();
 				var start = GridLayout.WorldToCell(_objectToPlace.GetStartPosition());
-				TakeArea(start, _objectToPlace.Size);
+				TakeArea_Instance(start, _objectToPlace.Size);
 			}
 			else
 			{
@@ -49,6 +51,9 @@ public class PlacementSystem : MonoBehaviour
 	public static Vector3 SnapCoordinateToGrid(Vector3 position) => Instance.SnapCoordinateToGrid_Instance(position);
 	public static Vector3 GetGridPositionToMove(Vector3 startPosition, Vector3 targetPosition)
 	 => Instance.GetGridPositionToMove_Instance(startPosition, targetPosition);
+	 
+	public static void ReleaseArea(Vector3 targetPosition, Vector3Int size)
+	 => Instance.ReleaseArea_Instance(targetPosition, size);
 
 	private void Awake()
 	{
@@ -65,8 +70,10 @@ public class PlacementSystem : MonoBehaviour
 	
 	public Vector3 GetGridPositionToMove_Instance(Vector3 startPosition, Vector3 targetPosition)
 	{
-		var direction = (targetPosition - startPosition).normalized;
-		var cell = GridLayout.WorldToCell(direction);
+		var direction = (targetPosition - startPosition).normalized * _tileSize;
+		Debug.Log("direction="+direction.ToString());
+		var targetTile = startPosition + direction;
+		var cell = GridLayout.WorldToCell(targetTile);
 		var position = Grid.GetCellCenterWorld(cell);
 		return position;
 	}
@@ -75,13 +82,9 @@ public class PlacementSystem : MonoBehaviour
 	{
 		var pos = SnapCoordinateToGrid_Instance(Vector3.zero);
 		
-		Debug.Log("Here2");
 		var obj = Instantiate(prefab, pos, Quaternion.identity);
-		Debug.Log("Here2");
 		_objectToPlace = obj.GetComponent<PlaceableObject>();
-		Debug.Log("Here2");
 		obj.AddComponent<ObjectDrag>();
-		Debug.Log("Here2");
 	}
 	
 	private static TileBase[] GetTileBlocks(BoundsInt area, Tilemap tilemap)
@@ -98,11 +101,11 @@ public class PlacementSystem : MonoBehaviour
 		return array;
 	}
 	
-	private bool CanBePlaced(PlaceableObject placeableObject)
+	private bool CanClaimTargetArea_Instance(Vector3 targetPosition, Vector3Int size)
 	{
 		var area = new BoundsInt();
-		area.position = GridLayout.WorldToCell(_objectToPlace.GetStartPosition());
-		area.size = placeableObject.Size;
+		area.position = GridLayout.WorldToCell(targetPosition);
+		area.size = size;
 		
 		var baseArray = GetTileBlocks(area, _mainTileMap);
 		
@@ -113,9 +116,16 @@ public class PlacementSystem : MonoBehaviour
 		return true;
 	}
 	
-	public void TakeArea(Vector3Int start, Vector3Int size)
+	public void TakeArea_Instance(Vector3Int start, Vector3Int size)
 	{
 		_mainTileMap.BoxFill(start, _whiteTile, start.x, start.y,
+		start.x + size.x, start.y + size.y);
+	}
+	
+	public void ReleaseArea_Instance(Vector3 targetPosition, Vector3Int size)
+	{
+		var start = GridLayout.WorldToCell(targetPosition);
+		_mainTileMap.BoxFill(start, null, start.x, start.y,
 		start.x + size.x, start.y + size.y);
 	}
 }

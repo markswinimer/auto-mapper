@@ -53,7 +53,7 @@ public class BattleController : MonoBehaviour
 
 		foreach(var enemy in enemies)
 		{
-			var targetDistance = Vector3.Distance(transform.position, enemy.transform.position);
+			var targetDistance = Vector3.Distance(combatant.transform.position, enemy.transform.position);
 
 			if (targetDistance < maxDistance)
 			{
@@ -74,5 +74,10 @@ public class BattleController : MonoBehaviour
 			if(teamsRemaining > 1) return false;
 		}
 		return true;
+	}
+	
+	public void HandleUnitDeath(Combatant combatant)
+	{
+		_teams[combatant.CombatTeam].Remove(combatant);
 	}
 }

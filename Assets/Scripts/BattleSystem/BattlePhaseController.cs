@@ -21,6 +21,11 @@ public class BattlePhaseController : MonoBehaviour
 		if(Input.GetKeyDown(KeyCode.F) && CurrentBattleState == BattleState.Placing)
 		{
 			var combatants = FindObjectsOfType<Combatant>().ToList();
+			if(combatants.FirstOrDefault(c => c.CombatTeam == Team.Player) == null)
+			{
+				//Probably show some error saying "cant start fight without units placed
+				return;
+			}
 			if(combatants.All(c => c.ReadyForCombat))
 			{
 				StartFight(combatants);
