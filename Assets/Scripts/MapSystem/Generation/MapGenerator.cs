@@ -1,214 +1,169 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-[RequireComponent(typeof(RoomCreator))]
 public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private MapGenerationData mapGenerationData;
 
-    private Map map;
+    private Map _map;
     private Grid _grid;
-    
-    private RoomCreator roomCreator;
-    private Dictionary<string, GameObject[]> prefabDictionary;
-    private Dictionary<Vector3Int, Room> rooms;
+    private Vector2Int _mapSize;
+    private Vector3Int _tileSize;
 
-    public void GenerateMap()
+    private Dictionary<TileType, GameObject[]> prefabDictionary;
+
+    public IEnumerator GenerateMap()
     {
-        Debug.Log("GENERATE");
+        SetDependencies();
+        CreateMapObject();
+        GenerateTiles();
 
+        yield return null;
+    }
+
+    private void CreateMapObject()
+    {
         GameObject mapObject = new GameObject("Map");
 
+        // consider breaking this into a map script init function 
         // Add the Map script to the new GameObject
-        map = mapObject.AddComponent<Map>();
+        _map = mapObject.AddComponent<Map>();
 
         // Add the Grid component to the same GameObject
         _grid = mapObject.AddComponent<Grid>();
-        // always will be XYZ
+
+        _mapSize = mapGenerationData.MapSize;
+        _tileSize = mapGenerationData.TileSize;
+
+        _map.MapWorldDimensions = new Vector2Int(_mapSize.x * _tileSize.x, _mapSize.y * _tileSize.y);
+        
+        _grid.cellSize = new Vector3Int(_tileSize.x, 1, _tileSize.z);
+
         _grid.cellSwizzle = GridLayout.CellSwizzle.XYZ;
-        _grid.cellSize = new Vector3();
+        _grid.cellLayout = GridLayout.CellLayout.Rectangle;
     }
 
-    private void Awake()
+    private void SetDependencies()
     {
-        // SetDependencies();
-        // InitializePrefabDictionary();
-        // ConfigMapCamera();
+        prefabDictionary = new Dictionary<TileType, GameObject[]>();
     }
 
-    // private void SetDependencies()
-    // {
-    //     _grid = map.GetComponent<Grid>();
-    //     roomCreator = GetComponent<RoomCreator>();
-    // }
+    private void GenerateTiles()
+    {
+        var coordinates = GenerateGridCoordinates();
+        Debug.Log(coordinates);
+        var shuffledCoordinates = ShuffleCoordinates(coordinates);
 
-    // private void InitializePrefabDictionary()
-    // {
-    //     prefabDictionary = new Dictionary<string, GameObject[]>();
-    // }
+        Dictionary<TileType, int> tileCounts = GetTileCountsAndPrefabs();
 
-    // private void ConfigMapCamera()
-    // {
-    //     float width = mapGenerationData.MapSize.x * mapGenerationData.RoomTileSize.x;
-    //     float height = mapGenerationData.MapSize.y * mapGenerationData.RoomTileSize.y;
-    // }
+        PlaceTiles(shuffledCoordinates, tileCounts);
+    }
 
-    // private void Start()
-    // {
-    //     InitMap();
-    // }
+    private List<Vector2Int> GenerateGridCoordinates()
+    {
 
-    // private void InitMap()
-    // {
-    //     CreateMapFromLayout(mapGenerationData);
-    // }
+        var coordinates = new List<Vector2Int>();
+        for (int x = 0; x < _mapSize.x; x++)
+        {
+            for (int y = 0; y < _mapSize.y; y++)
+            {
+                coordinates.Add(new Vector2Int(x, y));
+            }
+        }
+        return coordinates;
+    }
 
-    // private void CreateMapFromLayout(MapGenerationData layout)
-    // {
-    //     Vector2Int mapSize = layout.MapSize;
-    //     _grid.cellSize = layout.RoomTileSize;
-    //     _grid.cellLayout = GridLayout.CellLayout.Rectangle;
-    //     _grid.cellSwizzle = GridLayout.CellSwizzle.XZY;
+    private IEnumerable<Vector2Int> ShuffleCoordinates(List<Vector2Int> coordinates)
+    {
+        var rand = new System.Random(420);
+        return coordinates.OrderBy(t => rand.Next());
+    }
 
-    //     rooms = new Dictionary<Vector3Int, Room>();
+    // this information is set in the unity editor
+    // and is defined by the scriptable object MapGenerationData
+    // RoomCount, Prefab Arrays, Room Types 
+    private Dictionary<TileType, int> GetTileCountsAndPrefabs()
+    {
+        var tileCounts = new Dictionary<TileType, int>();
 
-    //     var coordinates = GenerateGridCoordinates(mapSize);
-    //     var shuffledCoordinates = ShuffleCoordinates(coordinates);
+        for (int i = 0; i < mapGenerationData.GetTileCount(); i++)
+        {
+            TileType type = mapGenerationData.GetTileTypeAtIndex(i);
+            int count = mapGenerationData.GetTileAmountAtIndex(i);
+            GameObject[] tilePrefabs = mapGenerationData.GetTilePrefabsAtIndex(i);
 
-    //     Dictionary<string, int> roomCounts = GetRoomCountsAndPrefabs(layout);
+            if (!prefabDictionary.ContainsKey(type))
+            {
+                prefabDictionary.Add(type, tilePrefabs);
+            }
 
-    //     PlaceRooms(shuffledCoordinates, roomCounts);
-    // }
+            if (count > 0)
+            {
+                tileCounts[type] = count;
+            }
+        }
+        return tileCounts;
+    }
 
-    // private List<Vector3Int> GenerateGridCoordinates(Vector2Int mapSize)
-    // {
-    //     var coordinates = new List<Vector3Int>();
-    //     for (int x = 0; x < mapSize.x; x++)
-    //     {
-    //         for (int y = 0; y < mapSize.y; y++)
-    //         {
-    //             coordinates.Add(new Vector3Int(x, y, 0));
-    //         }
-    //     }
-    //     return coordinates;
-    // }
+    private void PlaceTiles(IEnumerable<Vector2Int> coordinates, Dictionary<TileType, int> tileCounts)
+    {
+        foreach (var coordinate in coordinates)
+        {
+            if (tileCounts.Count == 0)
+            {
+                break;
+            }
 
-    // private IEnumerable<Vector3Int> ShuffleCoordinates(List<Vector3Int> coordinates)
-    // {
-    //     var rand = new System.Random(420);
-    //     return coordinates.OrderBy(t => rand.Next());
-    // }
+            foreach (var tileType in tileCounts.Keys.ToList())
+            {
+                if (tileCounts[tileType] > 0)
+                {
+                    CreateTileAndInitialize(coordinate, tileType);
+                    tileCounts[tileType]--;
+                    if (tileCounts[tileType] == 0)
+                    {
+                        tileCounts.Remove(tileType);
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
-    // private Dictionary<string, int> GetRoomCountsAndPrefabs(MapGenerationData layout)
-    // {
-    //     var roomCounts = new Dictionary<string, int>();
-    //     for (int i = 0; i < layout.GetRoomCount(); i++)
-    //     {
-    //         string type = layout.GetRoomTypeAtIndex(i);
-    //         int count = layout.GetRoomAmountAtIndex(i);
-    //         GameObject[] roomPrefabs = layout.GetRoomPrefabsAtIndex(i);
+    private GameObject GetPrefabByTileType(TileType tileType)
+    {
+        if (prefabDictionary.ContainsKey(tileType))
+        {
+            return prefabDictionary[tileType][UnityEngine.Random.Range(0, prefabDictionary[tileType].Length)];
+        }
+        else
+        {
+            Debug.LogError("Room type not found in dictionary: " + tileType);
+            return null;
+        }
+    }
 
-    //         if (!prefabDictionary.ContainsKey(type))
-    //         {
-    //             prefabDictionary.Add(type, roomPrefabs);
-    //         }
+    public void CreateTileAndInitialize(Vector2Int coords, TileType tileType)
+    {
+        Vector3Int worldCoords = new Vector3Int(coords.x, 0, coords.y);
+        Debug.Log("Creating tile at " + coords + " with type " + tileType);
 
-    //         if (count > 0)
-    //         {
-    //             roomCounts[type] = count;
-    //         }
-    //     }
-    //     return roomCounts;
-    // }
+        var position = _grid.GetCellCenterWorld(worldCoords);   
+        Debug.Log("World Position: " + position);
 
-    // private void PlaceRooms(IEnumerable<Vector3Int> coordinates, Dictionary<string, int> roomCounts)
-    // {
-    //     foreach (var coordinate in coordinates)
-    //     {
-    //         if (roomCounts.Count == 0)
-    //         {
-    //             break;
-    //         }
+        GameObject tileViewPrefab = GetPrefabByTileType(tileType);
+        string tileName = "tile_" + coords.x.ToString() + "_" + coords.y.ToString() + "_" + tileType.ToString();
 
-    //         foreach (var roomType in roomCounts.Keys.ToList())
-    //         {
-    //             if (roomCounts[roomType] > 0)
-    //             {
-    //                 CreateRoomAndInitialize(coordinate, roomType);
-    //                 roomCounts[roomType]--;
-    //                 if (roomCounts[roomType] == 0)
-    //                 {
-    //                     roomCounts.Remove(roomType);
-    //                 }
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
+        GameObject tile = new GameObject(tileName);
+        tile.transform.position = position;
+        tile.transform.parent = _map.transform;
 
-    // private GameObject GetPrefab(string roomType)
-    // {
-    //     if (prefabDictionary.ContainsKey(roomType))
-    //     {
-    //         return prefabDictionary[roomType][UnityEngine.Random.Range(0, prefabDictionary[roomType].Length)];
-    //     }
-    //     else
-    //     {
-    //         Debug.LogError("Room type not found in dictionary: " + roomType);
-    //         return null;
-    //     }
-    // }
+        // Add the Tile component (combined with TileController logic)
+        Tile tileComponent = tile.AddComponent<Tile>();
 
-    // private void CreateRoomAndInitialize(Vector3Int coords, string roomType)
-    // {
-    //     Debug.Log("Creating room at " + coords + " with type " + roomType);
-    //     var position = _grid.GetCellCenterWorld(coords);
-    //     Room newRoom = roomCreator.CreateRoom(position).GetComponent<Room>();
-
-    //     GameObject selectedPrefab = GetPrefab(roomType);
-    //     RoomState roomState = RoomState.Unvisited;
-    //     newRoom.SetData(coords, roomType, roomState, selectedPrefab, map);
-
-    //     rooms.Add(coords, newRoom);
-    // }
-
-    // public Room GetRoomAt(Vector3Int coordinates)
-    // {
-    //     foreach (var roomEntry in rooms)
-    //     {
-    //         Vector3Int roomCoords = roomEntry.Key;
-    //         Room roomy = roomEntry.Value;
-    //         Debug.Log("Room at " + roomCoords + ": " + roomy);
-    //     }
-    //     if (rooms.TryGetValue(coordinates, out Room room))
-    //     {
-    //         Debug.Log("found at coords: " + coordinates);
-    //         Debug.Log("FOUND ROOM: " + room);
-    //         return room;
-    //     }
-    //     else
-    //     {
-    //         Debug.LogError("No room found at coordinates: " + coordinates);
-    //         return null;
-    //     }
-    // }
-
-    // public Dictionary<Vector3Int, Room> GetAllRooms()
-    // {
-    //     return rooms;
-    // }
-
-    // public Vector3 GetWorldPosition(Vector2Int gridPosition)
-    // {
-    //     return _grid.GetCellCenterWorld(new Vector3Int(gridPosition.x, gridPosition.y, 0));
-    // }
-
-    // public Vector3Int GetGridPosition(Vector3 worldPosition)
-    // {
-    //     return _grid.WorldToCell(worldPosition);
-    // }
+        // Initialize the Tile component with data and the TileView prefab
+        tileComponent.Initialize(coords, tileType, tileViewPrefab);
+    }
 }

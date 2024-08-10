@@ -7,52 +7,52 @@ using UnityEngine;
 public class MapGenerationData : ScriptableObject
 {
 
-    public Vector3Int MapSize;
-    public Vector3Int RoomTileSize;
+    public Vector2Int MapSize;
+    public Vector3Int TileSize;
 
     [Serializable]
-    private class MapRoomSetup
+    private class MapTileSetup
     {
-        public int roomAmount;
-        public RoomType roomType;
-        public GameObject[] roomPrefabs;
+        public int tileAmount;
+        public TileType tileType;
+        public GameObject[] tilePrefabs;
     }
 
-    [SerializeField] private MapRoomSetup[] mapRooms;
+    [SerializeField] private MapTileSetup[] mapTiles;
 
-    public int GetRoomCount()
+    public int GetTileCount()
     {
-        return mapRooms.Length;
+        return mapTiles.Length;
     }
     
-    public string GetRoomTypeAtIndex(int index)
+    public TileType GetTileTypeAtIndex(int index)
     {
-        if (mapRooms.Length <= index)
+        if ( index < 0 || index >= mapTiles.Length )
         {
-            Debug.LogError("Room index out of range");
-            return "";
+            Debug.LogError("Tile index out of range");
+            return TileType.Empty;
         }
-        return mapRooms[index].roomType.ToString();
+        return mapTiles[index].tileType;
     }
 
-    public int GetRoomAmountAtIndex(int index)
+    public int GetTileAmountAtIndex(int index)
     {
-        if (mapRooms.Length <= index)
+        if (mapTiles.Length <= index)
         {
-            Debug.LogError("Room index out of range");
+            Debug.LogError("Tile index out of range");
             return -1;
         }
-        return mapRooms[index].roomAmount;
+        return mapTiles[index].tileAmount;
     }
 
-    public GameObject[] GetRoomPrefabsAtIndex(int index)
+    public GameObject[] GetTilePrefabsAtIndex(int index)
     {
-        if (index < 0 || index >= mapRooms.Length)
+        if (index < 0 || index >= mapTiles.Length)
         {
-            Debug.LogError("Room index out of range");
+            Debug.LogError("Tile index out of range");
             return null;  // Return null to indicate out of range
         }
-        return mapRooms[index].roomPrefabs;
+        return mapTiles[index].tilePrefabs;
     }
 
 }
