@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Combatant : MonoBehaviour
 {
-	[SerializeField] private int _hp = 10;
+	[SerializeField] public int CurrentHp = 10;
+	[SerializeField] public int MaxHp = 10;
 	[SerializeField] private int _attack = 2;
 	[SerializeField] private float _attackSpeed = 1;
 	[SerializeField] private float _moveSpeed = 2f;
@@ -22,6 +24,9 @@ public class Combatant : MonoBehaviour
 	public PlaceableObject PlaceableObject;
 	public Vector3 TargetPosition;
 	private NavMeshAgent _navMeshAgent;
+	public TargetCriteria TargetCriteria; 
+	public List<Gambit> Gambits;
+	private GambitHelper _gambitHelper;
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -30,12 +35,19 @@ public class Combatant : MonoBehaviour
 		_navMeshAgent.speed = _moveSpeed;
 		PlaceableObject = GetComponent<PlaceableObject>();
 		if(CombatTeam != Team.Player) ReadyForCombat = true;
+		Gambits = new List<Gambit>();
+		_gambitHelper = FindFirstObjectByType<GambitHelper>();
+		if(CombatTeam == Team.Player)
+		{
+			Gambits.Add(Instantiate(_gambitHelper.FirePrefab).GetComponent<Gambit>());
+			Gambits.Add(Instantiate(_gambitHelper.FreezePrefab).GetComponent<Gambit>());
+		}
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		if(_hp <= 0) Die();
+		if(CurrentHp <= 0) Die();
 	}
 	
 	public void StartFighting()
@@ -64,45 +76,65 @@ public class Combatant : MonoBehaviour
 	{
 		while(IsFighting)
 		{
-			_target = _battleController.FindTarget(this);
-			if(_target != null)
+			var readyGambits = Gambits.Where(g => g.IsReady);
+			Gambit gambitToActivate = null;
+			Debug.Log("Gams = "+ Gambits.Count().ToString());
+			Debug.Log("readyGams = "+ readyGambits.Count().ToString());
+			foreach(var gambit in readyGambits)
 			{
-				Debug.Log("Check if in range/move");
-				if(IsTargetInRange())
+				_target = _battleController.FindTarget(this, gambit.TargetCriteria);
+				Debug.Log("target=" + _target.ToString());
+				if(IsTargetInRange(gambit.Range))
 				{
-					_navMeshAgent.isStopped = true;
-					_target.DealDamage(_attack);
-					yield return new WaitForSeconds(_attackSpeed);
+					gambitToActivate = gambit;
+					break;
 				}
-				else
+			}
+			
+			if(gambitToActivate != null)
+			{
+				Debug.Log("Activate");
+				_navMeshAgent.isStopped = true;
+				GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
+				yield return new WaitForSeconds(gambitToActivate.ActivationTime);
+				gambitToActivate.ActivateBase(this, _target);
+				GetComponentInChildren<MeshRenderer>().material.color = Color.gray;
+			}
+			else
+			{
+				_target = _battleController.FindTarget(this);
+				if(_target != null)
 				{
-					_navMeshAgent.isStopped = false;
-					yield return MoveToTarget();
+					Debug.Log("Check if in range/move");
+					if(IsTargetInRange(_range))
+					{
+						_navMeshAgent.isStopped = true;
+						_target.DealDamage(_attack);
+						yield return new WaitForSeconds(_attackSpeed);
+					}
+					else
+					{
+						_navMeshAgent.isStopped = false;
+						yield return MoveToTarget();
+					}
 				}
 			}
 		}
 	}
 	
-	private void DealDamage(int attack)
+	public void DealDamage(int attack)
 	{
-		_hp -= attack;
+		CurrentHp -= attack;
 	}
 	
-	private bool IsTargetInRange()
+	private bool IsTargetInRange(float range)
 	{
 		var distance = Vector3.Distance(transform.position, _target.transform.position);
-		return distance <= _range;
+		return distance <= range;
 	}
 	
 	private IEnumerator MoveToTarget()
 	{
-		////TODO: Claim tile/check for claimed tile so people can't overlap
-		//var direction = (_target.transform.position - transform.position).normalized * Time.deltaTime * (_moveSpeed + _timeMultiplierForMovement);
-		//var startPosition = transform.position;
-		//var endPosition = startPosition + direction;
-		//transform.position = Vector3.Lerp(startPosition, endPosition, 1);
-		//yield return new WaitForEndOfFrame();
-		
 		_navMeshAgent.SetDestination(_target.transform.position);
 		yield return new WaitForEndOfFrame();
 	}

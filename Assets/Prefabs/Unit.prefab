@@ -103,16 +103,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cad6ab2f0981814aa160a90f262ec0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hp: 10
+  CurrentHp: 10
+  MaxHp: 10
   _attack: 2
   _attackSpeed: 1
   _moveSpeed: 2
   _range: 3
-  CombatTeam: 0
+  CombatTeam: 1
   IsFighting: 0
   ReadyForCombat: 0
   PlaceableObject: {fileID: 0}
   TargetPosition: {x: 0, y: 0, z: 0}
+  TargetCriteria: 1
+  Gambits: []
 --- !u!1001 &2100079737000394428
 PrefabInstance:
   m_ObjectHideFlags: 0
