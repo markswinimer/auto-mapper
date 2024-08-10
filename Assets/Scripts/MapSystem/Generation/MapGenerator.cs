@@ -16,10 +16,17 @@ public class MapGenerator : MonoBehaviour
 
     public IEnumerator GenerateMap()
     {
-        SetDependencies();
-        CreateMapObject();
-        GenerateTiles();
+        Debug.Log("Starting map generation...");
 
+        SetDependencies();
+        Debug.Log("Dependencies set.");
+
+        CreateMapObject();
+        Debug.Log("Map object created.");
+
+        GenerateTiles();
+        Debug.Log("Tiles generated.");
+        
         yield return null;
     }
 
@@ -33,6 +40,7 @@ public class MapGenerator : MonoBehaviour
 
         // Add the Grid component to the same GameObject
         _grid = mapObject.AddComponent<Grid>();
+        _map._grid = _grid;
 
         _mapSize = mapGenerationData.MapSize;
         _tileSize = mapGenerationData.TileSize;

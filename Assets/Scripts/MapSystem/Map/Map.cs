@@ -6,14 +6,22 @@ public class Map : MonoBehaviour {
     public Vector2Int MapWorldDimensions {get; set;}
     private Dictionary<Vector2Int, Tile> _tiles;
 
+    public static Map Instance { get; private set; }
+
     public void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this; 
+            DontDestroyOnLoad(gameObject);
+        }
+
         _tiles = new Dictionary<Vector2Int, Tile>();
     }
 
     public Vector3 GetPositionFromCoords(Vector2Int coords)
     {
-        Vector3Int worldCoords = new Vector3Int(coords.x, coords.y, 1);
+        Vector3Int worldCoords = new Vector3Int(coords.x, 1, coords.y);
         return _grid.GetCellCenterWorld(worldCoords);
     }
 

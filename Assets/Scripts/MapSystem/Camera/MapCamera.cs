@@ -11,7 +11,7 @@ public class MapCamera : MonoBehaviour
     [SerializeField] MapCameraTarget mapCameraTarget;
 
     private float targetFieldOfView = 50f;
-    private float fieldOfViewMinimum = 20f;
+    private float fieldOfViewMinimum = 10f;
     private float fieldOfViewMaximum = 100f;
 
     void Awake()
@@ -49,7 +49,8 @@ public class MapCamera : MonoBehaviour
         // Set the camera target position
         if (mapCameraTarget != null)
         {
-            mapCameraTarget.ScaleToGridSize(dimensions);
+            // mapCameraTarget.ScaleToGridSize(dimensions);
+            mapCameraTarget.MoveToPosition();
         }
         else
         {

@@ -495,6 +495,12 @@ PrefabInstance:
       propertyPath: mapGenerator
       value: 
       objectReference: {fileID: 1117191441}
+    - target: {fileID: 5221521303162584236, guid: 7dbcb3adcb6113846a7e1eb096310e66,
+        type: 3}
+      propertyPath: playerPrefab
+      value: 
+      objectReference: {fileID: 3126457926664281778, guid: 3f5d78c0bfbeeba45a75eb9f7fcba3f0,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 486260550760254781, guid: 7dbcb3adcb6113846a7e1eb096310e66, type: 3}
     m_RemovedGameObjects: []
