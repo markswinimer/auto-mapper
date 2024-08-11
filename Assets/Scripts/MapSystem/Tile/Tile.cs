@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IHoverable
 {
-    // Data properties
     public Vector2Int _coordinates { get; private set; }
     public TileType _tileType { get; private set; }
     public bool _isRevealed { get; private set; }
+    public bool canBeHovered { get; private set; } = true;
 
     private TileView _tileView;
 
@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour
         _coordinates = coords;
         _tileType = tileType;
         _isRevealed = false;
-
+        Debug.Log(_coordinates);
         // Instantiate the TileView prefab as a child
         GameObject tileViewObject = Instantiate(tileViewPrefab, transform);
         _tileView = tileViewObject.GetComponent<TileView>();
@@ -42,5 +42,20 @@ public class Tile : MonoBehaviour
         {
             _tileView.UpdateVisuals(this);
         }
+    }
+
+    public void OnHoverEnter()
+    {
+        _tileView.AddOutline();
+    }
+
+    public void OnHoverExit()
+    {
+        _tileView.RemoveOutline();
+    }
+
+    public bool IsHoverable()
+    {
+        return canBeHovered;
     }
 }
