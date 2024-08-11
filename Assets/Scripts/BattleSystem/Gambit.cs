@@ -6,7 +6,7 @@ public abstract class Gambit : MonoBehaviour
 {
 	public TargetCriteria TargetCriteria;
 	public float Cooldown;
-	public bool IsReady;
+	public bool OnCooldown;
 	public float Range = 20f;
 	public float ActivationTime = 1f;
 	
@@ -14,7 +14,7 @@ public abstract class Gambit : MonoBehaviour
 	void Start()
 	{
 		Cooldown = 5f;
-		IsReady = true;
+		OnCooldown = false;
 		Debug.Log("GambitStart");
 	}
 
@@ -26,7 +26,7 @@ public abstract class Gambit : MonoBehaviour
 	
 	public void ActivateBase(Combatant self, Combatant target)
 	{
-		IsReady = false;
+		OnCooldown = true;
 		Activate(self, target);
 		StartCoroutine(StartCooldown());
 	}
@@ -34,8 +34,12 @@ public abstract class Gambit : MonoBehaviour
 	private IEnumerator StartCooldown()
 	{
 		yield return new WaitForSeconds(Cooldown);
-		IsReady = true;
+		OnCooldown = false;
 	}
 	
 	public abstract void Activate(Combatant self, Combatant target);
+	public virtual bool IsReady(Combatant combatant)
+	{
+		return !OnCooldown;
+	}
 }

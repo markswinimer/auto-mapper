@@ -6,4 +6,6 @@ public class GambitHelper : MonoBehaviour
 {
 	public GameObject FirePrefab;
 	public GameObject FreezePrefab;
+	public GameObject CurePrefab;
+	public GameObject BarragePrefab;
 }

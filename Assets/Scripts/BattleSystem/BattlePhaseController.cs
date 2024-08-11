@@ -41,6 +41,7 @@ public class BattlePhaseController : MonoBehaviour
 	{
 		//get all combatants, set them to begin fighting
 		_battleController.InitializeTeams(combatants);
+		combatants.ForEach(c => c.SetupFrame());
 		combatants.ForEach(c => c.StartFighting());
 		
 		CurrentBattleState = BattleState.Fighting;

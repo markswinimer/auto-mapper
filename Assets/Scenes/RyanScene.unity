@@ -249,6 +249,10 @@ MonoBehaviour:
     type: 3}
   FreezePrefab: {fileID: 8009823638083269276, guid: 5fcac320cad276a4c9319f68ef96de7c,
     type: 3}
+  CurePrefab: {fileID: 8009823638083269276, guid: 7e79edab30132304784d32f430f4c6ee,
+    type: 3}
+  BarragePrefab: {fileID: 8667627129099093748, guid: 715fba62be1e4e441b8188e4ba867b5c,
+    type: 3}
 --- !u!1 &372986067
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,6 +421,62 @@ Tilemap:
     type: 3}
   m_PrefabInstance: {fileID: 1925145002}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &616611166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 616611167}
+  - component: {fileID: 616611168}
+  m_Layer: 0
+  m_Name: FrameHelper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &616611167
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616611166}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1296579667}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &616611168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616611166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 860a1071c22f5ba43a0d872c8e8611e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ValorEdgePrefab: {fileID: 423570076180945581, guid: cd5642e1093c17048a2608dbbfb1d770,
+    type: 3}
+  SharpShotPrefab: {fileID: 5328402713590305367, guid: 8bac0144dd14f594dae8381ba85a2f84,
+    type: 3}
+  BrokenPrefab: {fileID: 4343500487660921294, guid: 21fa11e4657f9f34e9ed2f9a315949aa,
+    type: 3}
+  ValorHeadPrefab: {fileID: 8116863279339317858, guid: 7b177b0722465634096b5f9227257cd4,
+    type: 3}
+  SharpHeadPrefab: {fileID: 6153973961471115011, guid: a4d7e91005e39cb4a9aa89b963219ccd,
+    type: 3}
+  BrokenHeadPrefab: {fileID: 3113157604284521544, guid: 768e9e66e57d1384b9f3f30008070f33,
+    type: 3}
 --- !u!1 &915992170
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,6 +716,7 @@ Transform:
   - {fileID: 372986068}
   - {fileID: 2001961935}
   - {fileID: 323446665}
+  - {fileID: 616611167}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1542638930

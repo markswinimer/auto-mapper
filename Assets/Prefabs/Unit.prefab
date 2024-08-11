@@ -103,12 +103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cad6ab2f0981814aa160a90f262ec0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentHp: 10
-  MaxHp: 10
-  _attack: 2
-  _attackSpeed: 1
-  _moveSpeed: 2
-  _range: 3
   CombatTeam: 1
   IsFighting: 0
   ReadyForCombat: 0
@@ -116,6 +110,8 @@ MonoBehaviour:
   TargetPosition: {x: 0, y: 0, z: 0}
   TargetCriteria: 1
   Gambits: []
+  Frame: {fileID: 6093602851316204879, guid: 21fa11e4657f9f34e9ed2f9a315949aa, type: 3}
+  Head: {fileID: 1720977302811631637, guid: 768e9e66e57d1384b9f3f30008070f33, type: 3}
 --- !u!1001 &2100079737000394428
 PrefabInstance:
   m_ObjectHideFlags: 0
