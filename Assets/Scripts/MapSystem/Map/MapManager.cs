@@ -17,7 +17,18 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
+        GameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
         StartCoroutine(InitializeMap());
+    }
+
+    void OnDestroy() 
+    {
+        GameManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+    }
+
+    void GameManagerOnGameStateChanged(GameState state)
+    {
+
     }
 
     private IEnumerator InitializeMap()
