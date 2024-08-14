@@ -11,18 +11,19 @@ public class HoverDetection : MonoBehaviour
         // Use the utility function to get the GameObject under the mouse cursor
         GameObject hitObject = MouseUtility3D.GetMouseHitObject(mainCamera, hoverLayerMask);
 
+        // Handle hover logic
         if (hitObject != null)
         {
-            IHoverable hoverableComponent = hitObject.GetComponent<IHoverable>();
+            IInteractable hoverableComponent = hitObject.GetComponent<IInteractable>();
 
             if (hoverableComponent != null && hoverableComponent.IsHoverable())
             {
                 if (hitObject != lastHoveredObject)
                 {
+                    // Trigger exit on the last hovered object
                     if (lastHoveredObject != null)
                     {
-                        // If a different object was previously hovered, trigger exit on it
-                        IHoverable lastHoverable = lastHoveredObject.GetComponent<IHoverable>();
+                        IInteractable lastHoverable = lastHoveredObject.GetComponent<IInteractable>();
                         if (lastHoverable != null && lastHoverable.IsHoverable())
                         {
                             lastHoverable.OnHoverExit();
@@ -37,15 +38,31 @@ public class HoverDetection : MonoBehaviour
         }
         else
         {
-            // If no object is hit and there was a previously hovered object, trigger exit
+            // If no object is hit, trigger exit on the last hovered object
             if (lastHoveredObject != null)
             {
-                IHoverable lastHoverable = lastHoveredObject.GetComponent<IHoverable>();
+                IInteractable lastHoverable = lastHoveredObject.GetComponent<IInteractable>();
                 if (lastHoverable != null && lastHoverable.IsHoverable())
                 {
                     lastHoverable.OnHoverExit();
                 }
                 lastHoveredObject = null;
+            }
+        }
+
+        // Handle click logic separately
+        if (Input.GetMouseButtonDown(0)) // 0 for left mouse button
+        {
+            if (hitObject != null)
+            {
+
+                IInteractable clickableComponent = hitObject.GetComponent<IInteractable>();
+                if (clickableComponent != null && clickableComponent.IsClickable())
+                {
+               Debug.Log("should click");
+
+                    clickableComponent.OnClick();
+                }
             }
         }
     }

@@ -7,50 +7,103 @@ using UnityEngine.UIElements;
 
 public class MapManager : MonoBehaviour
 {
+    public static MapManager Instance;
+
+    public MapState State;
+
     [SerializeField] private MapCamera mapCamera;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private UIDocument uiDocument;
     [SerializeField] private string spriteSheetName;
     [SerializeField] private MapGenerator mapGenerator;
 
+    public static event Action<MapState> OnMapStateChanged;
+
     private Map map;
 
     private void Awake()
     {
-        GameManager.OnGameStateChanged += GameManagerOnGameStateChanged;
-        StartCoroutine(InitializeMap());
+        Instance = this;
     }
 
-    void OnDestroy() 
+    public void UpdateMapState(MapState newState)
     {
-        GameManager.OnGameStateChanged -= GameManagerOnGameStateChanged;
+        State = newState;
+
+        switch (newState)
+        {
+            case MapState.InitMap:
+                InitializeMap();
+                
+                break;
+            case MapState.MapInstantiated:
+                FinishMapSetup();
+                
+                break;
+            case MapState.ResumeMap:
+                ResumeMap();
+
+                break;
+            case MapState.MovementPhase:
+                break;
+            case MapState.TilePhase:
+                break;
+            case MapState.MenuPhase:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
+        }
+
+        OnMapStateChanged?.Invoke(newState);
     }
 
-    void GameManagerOnGameStateChanged(GameState state)
+    // I'm thinking this is the right strategy, data will be loaded and context passed here 
+    // from gamemanager?
+    public void InitMapView(bool isNewMap)
     {
-
+        if (isNewMap)
+        {
+            UpdateMapState(MapState.InitMap);
+        }
+        else
+        {
+            UpdateMapState(MapState.ResumeMap);
+        }
     }
 
-    private IEnumerator InitializeMap()
+    // I think all map generation and loading may need to be in its own script
+    void InitializeMap()
     {
         Map existingMap = FindObjectOfType<Map>();
 
         if (existingMap == null)
         {
+            mapGenerator.GenerateMap();
             Debug.Log("generate map");
-            yield return StartCoroutine(mapGenerator.GenerateMap()); // Wait until map generation is complete
-            map = FindObjectOfType<Map>(); // Get the generated map reference
         }
         else
         {
-                Debug.Log("map found");
-
-                // Assuming LoadMap() might also take some time, if so, use another coroutine
-                // yield return StartCoroutine(mapLoader.LoadMap()); // Uncomment if mapLoader is asynchronous
-                map = existingMap;
+            UpdateMapState(MapState.MapInstantiated);
+            Debug.Log("map found");
         }
+    }
+
+    void FinishMapSetup()
+    {
+        map = FindObjectOfType<Map>(); // Get the generated map reference
         CreatePlayerOnMap();
-        ConfigMapCamera(); // This will only be called after the map generation is complete
+        ConfigMapCamera();
+        UpdateMapState(MapState.MovementPhase);
+    }
+
+    void ResumeMap()
+    {
+        //
+    }
+
+    public void ReturnToMapView()
+    {
+
     }
 
     private void ConfigMapCamera()
@@ -78,4 +131,15 @@ public class MapManager : MonoBehaviour
             Debug.LogError("Player component not found on playerPrefab.");
         }
     }
+}
+
+public enum MapState {
+    InitMap,
+    LoadMap,
+    GenerateMap,
+    MapInstantiated,
+    ResumeMap,
+    MovementPhase,
+    TilePhase,
+    MenuPhase
 }

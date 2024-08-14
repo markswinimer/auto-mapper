@@ -12,10 +12,11 @@ public class MapGenerator : MonoBehaviour
     private Grid _grid;
     private Vector2Int _mapSize;
     private Vector3Int _tileSize;
+    private bool _isCompleted;
 
     private Dictionary<TileType, GameObject[]> prefabDictionary;
 
-    public IEnumerator GenerateMap()
+    public void GenerateMap()
     {
         Debug.Log("Starting map generation...");
 
@@ -28,7 +29,7 @@ public class MapGenerator : MonoBehaviour
         GenerateTiles();
         Debug.Log("Tiles generated.");
         
-        yield return null;
+        MapManager.Instance.UpdateMapState(MapState.MapInstantiated);
     }
 
     private void CreateMapObject()

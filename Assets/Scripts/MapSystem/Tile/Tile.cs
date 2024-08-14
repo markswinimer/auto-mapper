@@ -1,14 +1,20 @@
 using UnityEngine;
 
-public class Tile : MonoBehaviour, IHoverable
+public class Tile : MonoBehaviour, IInteractable
 {
     public Vector2Int _coordinates { get; private set; }
     public TileType _tileType { get; private set; }
     public bool _isRevealed { get; private set; }
-    public bool canBeHovered { get; private set; } = true;
+    public bool _isHoverable { get; private set; } = true;
+    public bool _isClickable { get; private set; } = false;
 
     private TileView _tileView;
 
+    void Awake()
+    {
+        _isHoverable = true;
+        _isClickable = true;
+    }
     // Initialization method
     public void Initialize(Vector2Int coords, TileType tileType, GameObject tileViewPrefab)
     {
@@ -56,6 +62,16 @@ public class Tile : MonoBehaviour, IHoverable
 
     public bool IsHoverable()
     {
-        return canBeHovered;
+        return _isHoverable;
+    }
+
+    public void OnClick()
+    {
+        Debug.Log("clicked: " + _tileView);
+    }
+
+    public bool IsClickable()
+    {
+        return _isClickable;
     }
 }
