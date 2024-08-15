@@ -53,14 +53,16 @@ public class Map : MonoBehaviour {
         {
             Vector2Int tileCoords = entry.Key;
             Tile tile = entry.Value;
+            bool isTileAccessible = IsTileAccessible(currentCoords, tileCoords);
+            bool isTileVisible = IsTileVisible(currentCoords, tileCoords);
 
             if (currentCoords == tileCoords)
             {
+                tile.ToggleTileVisibilty(true);    
                 tile.CanVisit = false;
-                tile.UpdateTileVisibility(true);
             } else {
-                tile.CanVisit = IsTileAccessible(currentCoords, tileCoords);
-                tile.UpdateTileVisibility(IsTileVisible(currentCoords, tileCoords));
+                tile.ToggleTileVisibilty(isTileVisible);
+                tile.CanVisit = isTileAccessible;
             }
         }
 
@@ -70,7 +72,7 @@ public class Map : MonoBehaviour {
     {
         // these values will maybe be modified by player stats
         // Check if the tile is adjacent
-        bool isAdjacent = Mathf.Abs(currentCoords.x - tileCoords.x) + Mathf.Abs(currentCoords.y - tileCoords.y) == 1;
+        bool isAdjacent = Mathf.Abs(currentCoords.x - tileCoords.x) + Mathf.Abs(currentCoords.y - tileCoords.y) <= 1;
 
         // Check other conditions for accessibility
         return isAdjacent;

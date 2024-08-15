@@ -2,32 +2,47 @@ using UnityEngine;
 
 public class TileView : MonoBehaviour 
 {
-    [SerializeField] private GameObject fogOfWarOverlay;
+    [SerializeField] private GameObject TileVisuals;
+    [SerializeField] private GameObject FogOfWar;
 
+    void Awake()
+    {
+        ToggleTileVisibilty(false);
+    }
+    
     public void UpdateVisuals(bool visibility)
     {
-        UpdateFogOfWar(visibility);
+        // UpdateFogOfWar(visibility);
     }
 
-    private void UpdateFogOfWar(bool isRevealed)
+    public void ToggleTileVisibilty(bool isVisibile)
     {
-        fogOfWarOverlay.SetActive(!isRevealed);
+        TileVisuals.SetActive(isVisibile);
+        if (isVisibile)
+        {
+            // SetLayerAllChildren(TileVisuals, 0);
+            FogOfWar.layer = LayerMask.NameToLayer("Hidden");
+        }
+        else
+        {
+            FogOfWar.layer = LayerMask.NameToLayer("Default");
+        }
     }
 
     public void AddOutline()
     {
-        SetLayerAllChildren(gameObject.transform, 7);
+        SetLayerAllChildren(TileVisuals, 7);
     }
 
     public void RemoveOutline()
     {
-        SetLayerAllChildren(gameObject.transform, 0);
+        SetLayerAllChildren(TileVisuals, 0);
     }
 
-    void SetLayerAllChildren(Transform root, int layer)
+    void SetLayerAllChildren(GameObject gameObject, int layer)
     {
         gameObject.layer = layer;
-        var children = root.GetComponentsInChildren<Transform>(includeInactive: true);
+        var children = gameObject.transform.GetComponentsInChildren<Transform>(includeInactive: true);
         foreach (var child in children)
         {
             child.gameObject.layer = layer;

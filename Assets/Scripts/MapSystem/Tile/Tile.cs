@@ -38,27 +38,9 @@ public class Tile : MonoBehaviour, IInteractable
         Map.Instance.AddTile(coords, this);
     }
 
-    public void UpdateTileVisibility(bool visibility)
+    public void ToggleTileVisibilty(bool isVisible)
     {
-        if (visibility && !IsRevealed)
-        {
-            RevealTile();
-        } 
-        else
-        {
-            HideTile();
-        }
-        IsRevealed = visibility;
-    }
-
-    public void RevealTile()
-    {
-        UpdateVisuals();
-    }
-
-    public void HideTile()
-    {
-        UpdateVisuals();
+        _tileView.ToggleTileVisibilty(isVisible);
     }
 
     private void UpdateVisuals()
