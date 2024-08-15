@@ -74,9 +74,7 @@ public class MapManager : MonoBehaviour
     // I think all map generation and loading may need to be in its own script
     void InitializeMap()
     {
-        Map existingMap = FindObjectOfType<Map>();
-
-        if (existingMap == null)
+        if (Map.Instance == null)
         {
             mapGenerator.GenerateMap();
             Debug.Log("generate map");
@@ -90,7 +88,7 @@ public class MapManager : MonoBehaviour
 
     void FinishMapSetup()
     {
-        map = FindObjectOfType<Map>(); // Get the generated map reference
+        map = Map.Instance;
         CreatePlayerOnMap();
         ConfigMapCamera();
         UpdateMapState(MapState.MovementPhase);
@@ -115,7 +113,7 @@ public class MapManager : MonoBehaviour
     {
         // start position will eventually be loaded from save and should be a variable, otherwise bottom left
         Vector2Int startPosition = new Vector2Int(0,0);
-
+        Tile startingTile = Map.Instance.GetTileAtCoordinate(startPosition);
         // Instantiate the player at the start position
         GameObject playerInstance = Instantiate(playerPrefab);
 
@@ -124,7 +122,8 @@ public class MapManager : MonoBehaviour
 
         if (playerComponent != null)
         {
-            playerComponent.Initialize(startPosition);
+            Map.Instance.UpdateTileStates(startPosition);
+            playerComponent.Initialize(startingTile);
         }
         else
         {

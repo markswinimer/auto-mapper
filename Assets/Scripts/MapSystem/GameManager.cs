@@ -95,7 +95,6 @@ public class GameManager : MonoBehaviour {
     }
 }
 
-
 public enum GameState
 {
     LoadingGameState,

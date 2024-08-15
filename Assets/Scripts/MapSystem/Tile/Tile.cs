@@ -1,17 +1,24 @@
+using System.Numerics;
 using UnityEngine;
 
 public class Tile : MonoBehaviour, IInteractable
 {
     public Vector2Int _coordinates { get; private set; }
     public TileType _tileType { get; private set; }
-    public bool _isRevealed { get; private set; }
+
+    public bool CanVisit { get; set; } = false;
+    public bool IsRevealed { get; set; } = false;
+
     public bool _isHoverable { get; private set; } = true;
     public bool _isClickable { get; private set; } = false;
+
+    public TileAccess tileAccess;
 
     private TileView _tileView;
 
     void Awake()
     {
+        tileAccess = TileAccess.CanAccess;
         _isHoverable = true;
         _isClickable = true;
     }
@@ -20,7 +27,6 @@ public class Tile : MonoBehaviour, IInteractable
     {
         _coordinates = coords;
         _tileType = tileType;
-        _isRevealed = false;
         Debug.Log(_coordinates);
         // Instantiate the TileView prefab as a child
         GameObject tileViewObject = Instantiate(tileViewPrefab, transform);
@@ -28,17 +34,30 @@ public class Tile : MonoBehaviour, IInteractable
 
         // Update the visuals based on the initial state
         UpdateVisuals();
+
+        Map.Instance.AddTile(coords, this);
+    }
+
+    public void UpdateTileVisibility(bool visibility)
+    {
+        if (visibility && !IsRevealed)
+        {
+            RevealTile();
+        } 
+        else
+        {
+            HideTile();
+        }
+        IsRevealed = visibility;
     }
 
     public void RevealTile()
     {
-        _isRevealed = true;
         UpdateVisuals();
     }
 
     public void HideTile()
     {
-        _isRevealed = false;
         UpdateVisuals();
     }
 
@@ -67,7 +86,10 @@ public class Tile : MonoBehaviour, IInteractable
 
     public void OnClick()
     {
-        Debug.Log("clicked: " + _tileView);
+        if (CanVisit && tileAccess == TileAccess.CanAccess)
+        {
+            Player.Instance.TryMovePlayerToTile(this);
+        }
     }
 
     public bool IsClickable()

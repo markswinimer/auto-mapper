@@ -43,8 +43,46 @@ public class Map : MonoBehaviour {
 
     public Vector2Int GetMapWorldDimensions()
     {
-    
         Debug.Log(_grid);
         return new Vector2Int(1,1);
+    }
+
+    public void UpdateTileStates(Vector2Int currentCoords)
+    {
+        foreach (KeyValuePair<Vector2Int, Tile> entry in _tiles)
+        {
+            Vector2Int tileCoords = entry.Key;
+            Tile tile = entry.Value;
+
+            if (currentCoords == tileCoords)
+            {
+                tile.CanVisit = false;
+                tile.UpdateTileVisibility(true);
+            } else {
+                tile.CanVisit = IsTileAccessible(currentCoords, tileCoords);
+                tile.UpdateTileVisibility(IsTileVisible(currentCoords, tileCoords));
+            }
+        }
+
+    }
+
+    private bool IsTileAccessible(Vector2Int currentCoords, Vector2Int tileCoords)
+    {
+        // these values will maybe be modified by player stats
+        // Check if the tile is adjacent
+        bool isAdjacent = Mathf.Abs(currentCoords.x - tileCoords.x) + Mathf.Abs(currentCoords.y - tileCoords.y) == 1;
+
+        // Check other conditions for accessibility
+        return isAdjacent;
+    }
+
+    private bool IsTileVisible(Vector2Int currentCoords, Vector2Int tileCoords)
+    {
+        // these values will maybe be modified by player stats
+        // Check if the tile is adjacent
+        bool isAdjacent = Mathf.Abs(currentCoords.x - tileCoords.x) + Mathf.Abs(currentCoords.y - tileCoords.y) == 1;
+
+        // Check other conditions for accessibility
+        return isAdjacent;
     }
 }

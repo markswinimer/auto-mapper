@@ -4,9 +4,9 @@ public class TileView : MonoBehaviour
 {
     [SerializeField] private GameObject fogOfWarOverlay;
 
-    public void UpdateVisuals(Tile tileData)
+    public void UpdateVisuals(bool visibility)
     {
-        UpdateFogOfWar(tileData._isRevealed);
+        UpdateFogOfWar(visibility);
     }
 
     private void UpdateFogOfWar(bool isRevealed)
