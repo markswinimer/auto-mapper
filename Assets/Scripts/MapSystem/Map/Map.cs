@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class Map : MonoBehaviour {
-    public Grid _grid;
+    public Grid Grid { get; set; }
     public Vector2Int MapWorldDimensions {get; set;}
+    public Vector3 MapCenter {get; set;}
     private Dictionary<Vector2Int, Tile> _tiles;
 
     public static Map Instance { get; private set; }
@@ -22,7 +23,7 @@ public class Map : MonoBehaviour {
     public Vector3 GetPositionFromCoords(Vector2Int coords)
     {
         Vector3Int worldCoords = new Vector3Int(coords.x, 1, coords.y);
-        return _grid.GetCellCenterWorld(worldCoords);
+        return Grid.GetCellCenterWorld(worldCoords);
     }
 
     public Tile GetTileAtCoordinate(Vector2Int coordinate)
@@ -43,7 +44,7 @@ public class Map : MonoBehaviour {
 
     public Vector2Int GetMapWorldDimensions()
     {
-        Debug.Log(_grid);
+        Debug.Log(Grid);
         return new Vector2Int(1,1);
     }
 

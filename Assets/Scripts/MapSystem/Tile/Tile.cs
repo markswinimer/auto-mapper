@@ -40,25 +40,32 @@ public class Tile : MonoBehaviour, IInteractable
 
     public void ToggleTileVisibilty(bool isVisible)
     {
+        if ( IsRevealed )
+        {
+            
+        }
         _tileView.ToggleTileVisibilty(isVisible);
     }
 
     private void UpdateVisuals()
     {
+
         if (_tileView != null)
         {
-            _tileView.UpdateVisuals(this);
+            SetTileIcon();
         }
     }
 
     public void OnHoverEnter()
     {
         _tileView.AddOutline();
+        _tileView.ScaleIcon();
     }
 
     public void OnHoverExit()
     {
         _tileView.RemoveOutline();
+        _tileView.DescaleIcon();
     }
 
     public bool IsHoverable()
@@ -77,5 +84,13 @@ public class Tile : MonoBehaviour, IInteractable
     public bool IsClickable()
     {
         return _isClickable;
+    }
+
+    public void SetTileIcon()
+    {   
+        print("set icon");
+        Sprite tileIcon = IconMapper.Instance.GetSpriteForTileType(_tileType);
+        print(tileIcon);
+        _tileView.SetIcon(tileIcon);
     }
 }

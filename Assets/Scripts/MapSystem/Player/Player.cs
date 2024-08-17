@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
         currentTile = startingTile;
         currentCoords = currentTile._coordinates;
         UpdateWorldMapPosition(currentCoords);
-
+        this.transform.eulerAngles = new Vector3(0, 150, 0);
         MapManager.OnMapStateChanged += MapManagerOnMapStateChanged;
     }
 

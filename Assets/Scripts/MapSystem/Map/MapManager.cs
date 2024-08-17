@@ -19,6 +19,7 @@ public class MapManager : MonoBehaviour
 
     public static event Action<MapState> OnMapStateChanged;
 
+    private GameObject _player;
     private Map map;
 
     private void Awake()
@@ -119,7 +120,9 @@ public class MapManager : MonoBehaviour
 
         // Get the Player script component and initialize it
         Player playerComponent = playerInstance.GetComponent<Player>();
+        _player = playerInstance;
 
+        // MapCamera.instance.SetCameraFollow(_player.transform);
         if (playerComponent != null)
         {
             Map.Instance.UpdateTileStates(startPosition);

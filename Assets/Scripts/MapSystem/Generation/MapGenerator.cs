@@ -42,12 +42,17 @@ public class MapGenerator : MonoBehaviour
 
         // Add the Grid component to the same GameObject
         _grid = mapObject.AddComponent<Grid>();
-        _map._grid = _grid;
+        _map.Grid = _grid;
 
         _mapSize = mapGenerationData.MapSize;
         _tileSize = mapGenerationData.TileSize;
 
-        _map.MapWorldDimensions = new Vector2Int(_mapSize.x * _tileSize.x, _mapSize.y * _tileSize.y);
+        _map.MapWorldDimensions = new Vector2Int(_mapSize.x * _tileSize.x, _mapSize.y * _tileSize.z);
+        
+        float mapCenterX = _map.MapWorldDimensions.x / 2;
+        float mapCenterY = _map.MapWorldDimensions.y / 2;
+        
+        _map.MapCenter = new Vector3(mapCenterX, 0, mapCenterY);
         
         _grid.cellSize = new Vector3Int(_tileSize.x, 1, _tileSize.z);
 
