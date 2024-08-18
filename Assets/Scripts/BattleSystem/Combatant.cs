@@ -20,7 +20,7 @@ public class Combatant : MonoBehaviour
 	public Vector3 TargetPosition;
 	private NavMeshAgent _navMeshAgent;
 	public TargetCriteria TargetCriteria; 
-	public List<GambitSlot> Gambits;
+	public List<Gambit> Gambits;
 	public Frame Frame;
 	public Head Head;
 	// Start is called before the first frame update
@@ -30,7 +30,7 @@ public class Combatant : MonoBehaviour
 		_navMeshAgent = GetComponent<NavMeshAgent>();
 		PlaceableObject = GetComponent<PlaceableObject>();
 		if(CombatTeam != Team.Player) ReadyForCombat = true;
-		Gambits = new List<GambitSlot>();
+		Gambits = new List<Gambit>();
 		if(CombatTeam == Team.Player)
 		{
 			Frame = FindFirstObjectByType<FrameHelper>().SharpShotPrefab.GetComponent<Frame>();
@@ -64,10 +64,14 @@ public class Combatant : MonoBehaviour
 		CurrentHp = MaxHp;
 		
 		//TODO: Eventually UI / real requirements, for now just hardcode it
-		Gambits = Frame.Gambits.Where(g => CanUseGambit(g)).Select(g => new GambitSlot(g, GambitModifier.None)).ToList();
-		Gambits.AddRange(Head.Gambits.Where(g => CanUseGambit(g)).Select(g => new GambitSlot(g, GambitModifier.None)).ToList());
-		Gambits = Gambits.Take(Frame.GambitSlotCount).ToList();
-		Gambits.ForEach(g => g.ModfiyGambit());
+		var gambitsToAdd = Frame.Gambits.Where(g => CanUseGambit(g)).Select(g => new GambitSlot(g, GambitModifier.None)).ToList();
+		gambitsToAdd.AddRange(Head.Gambits.Where(g => CanUseGambit(g)).Select(g => new GambitSlot(g, GambitModifier.None)).ToList());
+		gambitsToAdd = gambitsToAdd.Take(Frame.GambitSlotCount).ToList();
+		gambitsToAdd.ForEach(g => g.ModfiyGambit());
+		foreach(var gambit in gambitsToAdd)
+		{
+			Gambits.Add(Instantiate(gambit.Gambit, transform));
+		}
 	}
 	
 	public void StopFighting()
@@ -87,9 +91,8 @@ public class Combatant : MonoBehaviour
 	{
 		while(IsFighting)
 		{
-			foreach(var gambitSlot in Gambits)
+			foreach(var gambit in Gambits)
 			{
-				var gambit = gambitSlot.Gambit;
 				var gambitTargetCriteria = gambit.TargetCriteria == TargetCriteria.None ? TargetCriteria : gambit.TargetCriteria;
 				_target = _battleController.FindTarget(this, gambitTargetCriteria);
 				Debug.Log("target=" + _target.ToString());
@@ -97,7 +100,10 @@ public class Combatant : MonoBehaviour
 				{
 					Debug.Log("Activate");
 					_navMeshAgent.isStopped = true;
+					transform.LookAt(_target.transform);
 					GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
+					Debug.Log($"gambit="+gambit.GetType().Name);
+					gambit.HandleParticles(_target.transform);
 					yield return new WaitForSeconds(_battleController.GambitDelay);
 					gambit.ActivateBase(this, _target);
 					GetComponentInChildren<MeshRenderer>().material.color = Frame.Color;
