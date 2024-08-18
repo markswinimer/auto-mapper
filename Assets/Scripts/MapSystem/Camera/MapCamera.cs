@@ -62,8 +62,6 @@ public class MapCamera : MonoBehaviour
         mapCameraTarget.transform.rotation = Quaternion.Euler(0, -180, 0);
         print("map > > " + mapCameraTarget.transform.eulerAngles.y); // Should print 210
 
-
-
         // Add the Grid component to the same GameObject
 
         if (mapCameraTarget != null)
