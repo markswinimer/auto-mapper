@@ -45,6 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Color: {r: 0.20784315, g: 0.13333334, b: 0.07058824, a: 0}
-  Gambits:
-  - {fileID: 6835091862795483356, guid: 715fba62be1e4e441b8188e4ba867b5c, type: 3}
+  Gambits: []
   BaseHp: 5

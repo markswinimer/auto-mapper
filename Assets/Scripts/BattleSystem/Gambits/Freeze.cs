@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class Freeze : Gambit
 {
-	private int _damage;
-	
 	// Start is called before the first frame update
 	void Start()
 	{
-		Cooldown = 10f;
-		_damage = 2;
-		ActivationTime = 1f;
+		Power = 2;
 		TargetCriteria = TargetCriteria.HighestMaxHp;
 	}
 
@@ -22,7 +18,6 @@ public class Freeze : Gambit
 	}
 	public override void Activate(Combatant self, Combatant target)
 	{
-		target.DealDamage(_damage);
-		target.GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
+		target.DealDamage((int)Power);
 	}
 }

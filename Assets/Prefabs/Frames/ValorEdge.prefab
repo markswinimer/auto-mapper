@@ -48,6 +48,9 @@ MonoBehaviour:
   Color: {r: 0.6431373, g: 0.5372549, b: 0.45098042, a: 0}
   Gambits:
   - {fileID: -3224163682352678895, guid: 7e79edab30132304784d32f430f4c6ee, type: 3}
+  - {fileID: 4092382249900787833, guid: a8ee09eb7d079184082a06a403563d68, type: 3}
+  - {fileID: 4092382249900787833, guid: a8ee09eb7d079184082a06a403563d68, type: 3}
+  - {fileID: -3224163682352678895, guid: 7e79edab30132304784d32f430f4c6ee, type: 3}
   Damage: 3
   AttackDelay: 1
   BaseHp: 50

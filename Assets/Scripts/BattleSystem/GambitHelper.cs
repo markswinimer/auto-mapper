@@ -8,4 +8,5 @@ public class GambitHelper : MonoBehaviour
 	public GameObject FreezePrefab;
 	public GameObject CurePrefab;
 	public GameObject BarragePrefab;
+	public GameObject MeleeAttack;
 }

@@ -7,6 +7,7 @@ public class BattleController : MonoBehaviour
 {
 	private Dictionary<Team, List<Combatant>> _teams;
 	private Dictionary<TargetCriteria, Func<Combatant, List<Combatant>, Combatant>> _targetingMethod;
+	public float GambitDelay = 2f;
 	
 	// Start is called before the first frame update
 	void Start()

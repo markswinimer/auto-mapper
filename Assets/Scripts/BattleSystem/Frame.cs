@@ -14,6 +14,7 @@ public abstract class Frame : MonoBehaviour
 	public float BlockDamageReductionPercentage;
 	public float MoveSpeed;
 	public float Range;
+	public int GambitSlotCount = 4;
 	
 	// Start is called before the first frame update
 	void Start()

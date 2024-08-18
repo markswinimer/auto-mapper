@@ -4,14 +4,9 @@ using UnityEngine;
 
 public class Barrage : Gambit
 {
-	private int _damage;
-	
 	// Start is called before the first frame update
 	void Start()
 	{
-		Cooldown = 5f;
-		_damage = 3;
-		ActivationTime = 2f;
 		TargetCriteria = TargetCriteria.None;
 		Range = 15f;
 	}
@@ -23,11 +18,10 @@ public class Barrage : Gambit
 	}
 	public override void Activate(Combatant self, Combatant target)
 	{
-		target.DealDamage(_damage);
-		target.DealDamage(_damage);
-		target.DealDamage(_damage);
-		target.DealDamage(_damage);
-		target.DealDamage(_damage);
-		target.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+		target.DealDamage((int)Power);
+		target.DealDamage((int)Power);
+		target.DealDamage((int)Power);
+		target.DealDamage((int)Power);
+		target.DealDamage((int)Power);
 	}
 }

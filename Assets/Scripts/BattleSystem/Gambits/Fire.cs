@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class Fire : Gambit
 {
-	private int _damage;
-	
 	// Start is called before the first frame update
 	void Start()
 	{
-		Cooldown = 5f;
-		_damage = 5;
-		ActivationTime = 2f;
+		Power = 5;
 		TargetCriteria = TargetCriteria.LowestMaxHp;
 	}
 
@@ -22,7 +18,6 @@ public class Fire : Gambit
 	}
 	public override void Activate(Combatant self, Combatant target)
 	{
-		target.DealDamage(_damage);
-		target.GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+		target.DealDamage((int)Power);
 	}
 }

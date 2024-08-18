@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5328402713590305367
+--- !u!1 &723308466697329307
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8266321281994598017}
-  - component: {fileID: 7454461356271301128}
+  - component: {fileID: 3691268715789991206}
+  - component: {fileID: 4092382249900787833}
   m_Layer: 0
-  m_Name: SharpShot
+  m_Name: MeleeAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8266321281994598017
+--- !u!4 &3691268715789991206
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5328402713590305367}
+  m_GameObject: {fileID: 723308466697329307}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -10.159905, y: -0.36901283, z: 3.824132}
@@ -32,29 +32,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7454461356271301128
+--- !u!114 &4092382249900787833
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5328402713590305367}
+  m_GameObject: {fileID: 723308466697329307}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae925d1e0cf3bf4c94a39b320144913, type: 3}
+  m_Script: {fileID: 11500000, guid: 02876085faa91884bad090a98e1b67de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WeaponTypes: 0100000002000000
-  Color: {r: 0.21960786, g: 0.14509805, b: 0.07450981, a: 0}
-  Gambits:
-  - {fileID: 7463654694462212634, guid: 5fcac320cad276a4c9319f68ef96de7c, type: 3}
-  - {fileID: 6835091862795483356, guid: 715fba62be1e4e441b8188e4ba867b5c, type: 3}
-  - {fileID: 6835091862795483356, guid: 715fba62be1e4e441b8188e4ba867b5c, type: 3}
-  - {fileID: 4092382249900787833, guid: a8ee09eb7d079184082a06a403563d68, type: 3}
-  Damage: 3
-  AttackDelay: 0.5
-  BaseHp: 25
-  BlockRate: 0
-  BlockDamageReductionPercentage: 0
-  MoveSpeed: 2
-  Range: 15
+  TargetCriteria: 2
+  Range: 3

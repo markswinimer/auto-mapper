@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cure : Gambit
+public class MeleeAttack : Gambit
 {
 	// Start is called before the first frame update
 	void Start()
 	{
 		Power = 5;
-		TargetCriteria = TargetCriteria.Self;
+		TargetCriteria = TargetCriteria.LowestMaxHp;
 	}
 
 	// Update is called once per frame
@@ -18,6 +18,6 @@ public class Cure : Gambit
 	}
 	public override void Activate(Combatant self, Combatant target)
 	{
-		target.CurrentHp += (int)Power;
+		target.DealDamage((int)Power);
 	}
 }

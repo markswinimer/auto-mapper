@@ -47,7 +47,10 @@ MonoBehaviour:
   WeaponTypes: 01000000
   Color: {r: 0, g: 0, b: 0, a: 0}
   Gambits:
-  - {fileID: 3459022627284470371, guid: c7db272804be55b4696199b09ac5d474, type: 3}
+  - {fileID: 4092382249900787833, guid: a8ee09eb7d079184082a06a403563d68, type: 3}
+  - {fileID: 4092382249900787833, guid: a8ee09eb7d079184082a06a403563d68, type: 3}
+  - {fileID: 4092382249900787833, guid: a8ee09eb7d079184082a06a403563d68, type: 3}
+  - {fileID: 4092382249900787833, guid: a8ee09eb7d079184082a06a403563d68, type: 3}
   Damage: 2
   AttackDelay: 3
   BaseHp: 20
