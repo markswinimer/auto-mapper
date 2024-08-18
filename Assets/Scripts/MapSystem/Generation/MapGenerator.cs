@@ -6,15 +6,17 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private MapGenerationData mapGenerationData;
+    [SerializeField] private GameObject tilePrefab;
 
     private Map _map;
     private Grid _grid;
     private Vector2Int _mapSize;
     private Vector3Int _tileSize;
+    private bool _isCompleted;
 
     private Dictionary<TileType, GameObject[]> prefabDictionary;
 
-    public IEnumerator GenerateMap()
+    public void GenerateMap()
     {
         Debug.Log("Starting map generation...");
 
@@ -27,7 +29,7 @@ public class MapGenerator : MonoBehaviour
         GenerateTiles();
         Debug.Log("Tiles generated.");
         
-        yield return null;
+        MapManager.Instance.UpdateMapState(MapState.MapInstantiated);
     }
 
     private void CreateMapObject()
@@ -40,12 +42,17 @@ public class MapGenerator : MonoBehaviour
 
         // Add the Grid component to the same GameObject
         _grid = mapObject.AddComponent<Grid>();
-        _map._grid = _grid;
+        _map.Grid = _grid;
 
         _mapSize = mapGenerationData.MapSize;
         _tileSize = mapGenerationData.TileSize;
 
-        _map.MapWorldDimensions = new Vector2Int(_mapSize.x * _tileSize.x, _mapSize.y * _tileSize.y);
+        _map.MapWorldDimensions = new Vector2Int(_mapSize.x * _tileSize.x, _mapSize.y * _tileSize.z);
+        
+        float mapCenterX = _map.MapWorldDimensions.x / 2;
+        float mapCenterY = _map.MapWorldDimensions.y / 2;
+        
+        _map.MapCenter = new Vector3(mapCenterX, 0, mapCenterY);
         
         _grid.cellSize = new Vector3Int(_tileSize.x, 1, _tileSize.z);
 
@@ -158,20 +165,26 @@ public class MapGenerator : MonoBehaviour
         Vector3Int worldCoords = new Vector3Int(coords.x, 0, coords.y);
         Debug.Log("Creating tile at " + coords + " with type " + tileType);
 
-        var position = _grid.GetCellCenterWorld(worldCoords);   
+        var position = _grid.GetCellCenterWorld(worldCoords);
         Debug.Log("World Position: " + position);
 
         GameObject tileViewPrefab = GetPrefabByTileType(tileType);
         string tileName = "tile_" + coords.x.ToString() + "_" + coords.y.ToString() + "_" + tileType.ToString();
 
-        GameObject tile = new GameObject(tileName);
-        tile.transform.position = position;
-        tile.transform.parent = _map.transform;
+        // Instantiate the tile prefab
+        GameObject tile = Instantiate(tilePrefab, position, Quaternion.identity, _map.transform);
+        tile.name = tileName;
 
-        // Add the Tile component (combined with TileController logic)
-        Tile tileComponent = tile.AddComponent<Tile>();
-
-        // Initialize the Tile component with data and the TileView prefab
-        tileComponent.Initialize(coords, tileType, tileViewPrefab);
+        // Get the Tile component and initialize it
+        Tile tileComponent = tile.GetComponent<Tile>();
+        if (tileComponent != null)
+        {
+            // Initialize the Tile component with data and the TileView prefab
+            tileComponent.Initialize(coords, tileType, tileViewPrefab);
+        }
+        else
+        {
+            Debug.LogError("Tile prefab does not have a Tile component attached.");
+        }
     }
 }

@@ -6,14 +6,13 @@ public class MapCameraTarget : MonoBehaviour
     private void Awake()
     {
         // Set the camera target to the current instance
-        // transform.position = new Vector3(0, 0, 0);
+        transform.position = Map.Instance.MapCenter;
     }
+
     // This is used as a target for the cinemachine camera
     // it is moved by the grid script
     public void MoveToPosition()
     {
-        //currently always should be at 0,0,0;
-        transform.position = new Vector3(20, 10, 0);
     }
 
     public void ScaleToGridSize(Vector2Int dimensions)

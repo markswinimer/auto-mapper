@@ -1,46 +1,96 @@
+using System.Numerics;
 using UnityEngine;
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IInteractable
 {
-    // Data properties
     public Vector2Int _coordinates { get; private set; }
     public TileType _tileType { get; private set; }
-    public bool _isRevealed { get; private set; }
+
+    public bool CanVisit { get; set; } = false;
+    public bool IsRevealed { get; set; } = false;
+
+    public bool _isHoverable { get; private set; } = true;
+    public bool _isClickable { get; private set; } = false;
+
+    public TileAccess tileAccess;
 
     private TileView _tileView;
 
+    void Awake()
+    {
+        tileAccess = TileAccess.CanAccess;
+        _isHoverable = true;
+        _isClickable = true;
+    }
     // Initialization method
     public void Initialize(Vector2Int coords, TileType tileType, GameObject tileViewPrefab)
     {
         _coordinates = coords;
         _tileType = tileType;
-        _isRevealed = false;
-
+        Debug.Log(_coordinates);
         // Instantiate the TileView prefab as a child
         GameObject tileViewObject = Instantiate(tileViewPrefab, transform);
         _tileView = tileViewObject.GetComponent<TileView>();
 
         // Update the visuals based on the initial state
         UpdateVisuals();
+
+        Map.Instance.AddTile(coords, this);
     }
 
-    public void RevealTile()
+    public void ToggleTileVisibilty(bool isVisible)
     {
-        _isRevealed = true;
-        UpdateVisuals();
-    }
-
-    public void HideTile()
-    {
-        _isRevealed = false;
-        UpdateVisuals();
+        if ( IsRevealed )
+        {
+            
+        }
+        _tileView.ToggleTileVisibilty(isVisible);
     }
 
     private void UpdateVisuals()
     {
+
         if (_tileView != null)
         {
-            _tileView.UpdateVisuals(this);
+            SetTileIcon();
         }
+    }
+
+    public void OnHoverEnter()
+    {
+        _tileView.AddOutline();
+        _tileView.ScaleIcon();
+    }
+
+    public void OnHoverExit()
+    {
+        _tileView.RemoveOutline();
+        _tileView.DescaleIcon();
+    }
+
+    public bool IsHoverable()
+    {
+        return _isHoverable;
+    }
+
+    public void OnClick()
+    {
+        if (CanVisit && tileAccess == TileAccess.CanAccess)
+        {
+            Player.Instance.TryMovePlayerToTile(this);
+        }
+    }
+
+    public bool IsClickable()
+    {
+        return _isClickable;
+    }
+
+    public void SetTileIcon()
+    {   
+        print("set icon");
+        Sprite tileIcon = IconMapper.Instance.GetSpriteForTileType(_tileType);
+        print(tileIcon);
+        _tileView.SetIcon(tileIcon);
     }
 }

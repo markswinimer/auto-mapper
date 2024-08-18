@@ -4,4 +4,5 @@ public enum TileType
     Store,
     Battle,
     Event,
+    Final
 }
