@@ -12,7 +12,7 @@ public class MainUI : MonoBehaviour
     public static event Action SpinClicked;
 
     void Start() {
-        Generate();    
+        StartCoroutine(Generate());
     }
 
     // we need to remove this if we build the project?
@@ -27,8 +27,8 @@ public class MainUI : MonoBehaviour
     {
         yield return null;
         //actual canvas things are being put on
-        // root.Clear();
         var root = _document.rootVisualElement;
+        root.Clear();
 
         root.styleSheets.Add(_styleSheet);
 
