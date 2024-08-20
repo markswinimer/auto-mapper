@@ -1,4 +1,3 @@
-using System.Numerics;
 using UnityEngine;
 
 public class Tile : MonoBehaviour, IInteractable
@@ -11,6 +10,11 @@ public class Tile : MonoBehaviour, IInteractable
 
     public bool _isHoverable { get; private set; } = true;
     public bool _isClickable { get; private set; } = false;
+
+    // ui test
+    private float _targetScale = 1;
+    private Vector3 _scaleVelocity;
+    private Quaternion _targetRotation;
 
     public TileAccess tileAccess;
 
@@ -38,6 +42,36 @@ public class Tile : MonoBehaviour, IInteractable
         Map.Instance.AddTile(coords, this);
     }
 
+    void Update()
+    {
+        transform.localScale =
+          Vector3.SmoothDamp(transform.localScale,
+              _targetScale * Vector3.one, ref _scaleVelocity, .15f);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation,
+            _targetRotation, Time.deltaTime * 5);
+    }
+
+    private void OnEnable() 
+    {
+        MainUI.ScaleChanged += OnScaleChanged;
+        MainUI.SpinClicked += MainUIOnSpinClicked;
+    }
+
+    private void OnDisable() 
+    {
+        MainUI.ScaleChanged -= OnScaleChanged;
+        MainUI.SpinClicked -= MainUIOnSpinClicked;
+    }
+
+    void OnScaleChanged(float newScale)
+    {
+        _targetScale = newScale;
+    }
+    void MainUIOnSpinClicked()
+    {
+        _targetRotation = transform.rotation * Quaternion.Euler(Random.insideUnitSphere * 360);
+    }
     public void ToggleTileVisibilty(bool isVisible)
     {
         if ( IsRevealed )

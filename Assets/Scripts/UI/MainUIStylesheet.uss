@@ -1,0 +1,59 @@
+:root {
+    justify-content: center;
+    align-items: center;
+
+    --border-width: 4px;
+}
+
+.container {
+
+}
+
+.view-box {
+    width: 500px;
+    height: 350px;
+}
+
+.bordered-box {
+    border-width: var(--border-width);
+    border-color: white;
+    border-radius: 5px;
+}
+.control-box {
+    flex-direction: row;
+    margin-top: 10px;
+    width: 500px;
+    padding: 10px;
+}
+
+.control-box Button {
+    width: 70px;
+    height: 70px;
+    background-color: orange;
+    border-width: 4px;
+    border-color: white;
+    transition: all 0.25s;
+
+    color: white;
+    -unity-font-style: bold;
+}
+
+.control-box Button:hover {
+    background-color: red;
+    border-radius: 10px;
+    scale: 1.1;
+}
+
+.control-box Slider {
+    flex-grow: 1;
+}
+
+.unity-base-slider__dragger {
+    margin-top: -15px;
+    height: 35px;
+    width: 35px;
+    border-width: var(--border-width);
+    border-radius: 50%;
+    border-color: white;
+    background-color: orange;
+}
