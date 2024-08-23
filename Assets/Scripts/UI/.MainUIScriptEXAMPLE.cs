@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class MainUI : MonoBehaviour
+public class MainUIEXAMPLE : MonoBehaviour
 {
     [SerializeField] private UIDocument _document;
     [SerializeField] private StyleSheet _styleSheet;
@@ -32,27 +32,40 @@ public class MainUI : MonoBehaviour
 
         root.styleSheets.Add(_styleSheet);
 
-        var gameLog = Create("game-log");
+        var container = Create("container");
 
-        // bottom icons
-        // loop through data as there will be very similar repeated icons
-        // consider creating a library to get the id from index
-        // that would be useful for seeing the order in the ui and referencing code?
-        var bottomBar = Create("bottom-bar");
+        var viewBox = Create("view-box", "bordered-box");
+        container.Add(viewBox);
+
+        var controlBox = Create("control-box", "bordered-box");
+        container.Add(controlBox);
+
+        var spinButton = Create<Button>();
+        spinButton.text = "Spin";
+        spinButton.clicked += SpinClicked;
+        controlBox.Add(spinButton);
+
+        // can look up how to access these values in the unity files 
+        var scaleSlider = Create<Slider>();
+        scaleSlider.lowValue = 0.5f;
+        scaleSlider.highValue = 2f;
+        scaleSlider.value = 1f;
+
+        scaleSlider.RegisterValueChangedCallback(value => ScaleChanged?.Invoke(value.newValue));
+        controlBox.Add(scaleSlider);
         
-        string[] bottomButtonData = { "mapButton", "menuButton" };
-        for (int i = 0; i < bottomButtonData.Length; i++)
-        {
-            var icon = Create("bottom-bar__icon",$"bottom-bar__icon-{i + 1}");
-            icon.name = bottomButtonData[i];
-            bottomBar.Add(icon);
-        }
-
-        root.Add(bottomBar);
-        root.Add(gameLog);
+        root.Add(container);
 
         // example of using tweening engine, still in experimental
-       
+        if (Application.isPlaying)
+        {
+            var targetPosition = container.worldTransform.GetPosition();
+            var startPosition = targetPosition + Vector3.up * 100;
+
+            controlBox.experimental.animation.Position(targetPosition, 2000).from = startPosition;
+            //where you start, where you end, the duration, and what happens each tic of the event
+            controlBox.experimental.animation.Start(0, 1, 2000, (e,v) => e.style.opacity = new StyleFloat(v));
+        }
     }
 
     //helper function to quicken writing and adding elements

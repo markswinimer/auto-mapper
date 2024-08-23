@@ -99,6 +99,7 @@ public class TileView : MonoBehaviour
     public void SetIcon(Sprite sprite)
     {
         print(sprite);
+
         if (sprite)
         {
 
@@ -120,7 +121,7 @@ public class TileView : MonoBehaviour
             _iconInitialScale = _icon.transform.localScale * 2f;
 
 
-            iconObject.transform.localPosition = new Vector3(0f, 3f, -1f);
+            iconObject.transform.localPosition = new Vector3(0f, 0f, 0f);
             iconObject.transform.localScale = _iconInitialScale;
         }
         else

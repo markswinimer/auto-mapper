@@ -15,9 +15,9 @@
 }
 
 .bordered-box {
-    border-width: var(--border-width);
+    /* border-width: var(--border-width);
     border-color: white;
-    border-radius: 5px;
+    border-radius: 5px; */
 }
 .control-box {
     flex-direction: row;
