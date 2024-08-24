@@ -1,59 +1,67 @@
 :root {
-    justify-content: center;
-    align-items: center;
-
+    height: 100%;
+    width: 100%;
+    /* variables - these should be defined in :root */
     --border-width: 4px;
+    --bg-dark: rgba(0, 0, 0, 0.5);
+    --bg-dark-2: rgba(8,20,30,.5);
+    --spacing: 10px;
 }
 
-.container {
-
-}
-
-.view-box {
-    width: 500px;
-    height: 350px;
-}
-
-.bordered-box {
-    /* border-width: var(--border-width);
-    border-color: white;
-    border-radius: 5px; */
-}
-.control-box {
-    flex-direction: row;
-    margin-top: 10px;
-    width: 500px;
-    padding: 10px;
-}
-
-.control-box Button {
-    width: 70px;
-    height: 70px;
-    background-color: orange;
-    border-width: 4px;
-    border-color: white;
-    transition: all 0.25s;
-
-    color: white;
-    -unity-font-style: bold;
-}
-
-.control-box Button:hover {
-    background-color: red;
-    border-radius: 10px;
-    scale: 1.1;
-}
-
-.control-box Slider {
-    flex-grow: 1;
-}
-
-.unity-base-slider__dragger {
-    margin-top: -15px;
+.top-bar {
+    width: 100%;
+    background-color: #08141e;
     height: 35px;
-    width: 35px;
-    border-width: var(--border-width);
-    border-radius: 50%;
-    border-color: white;
-    background-color: orange;
+    margin-bottom: auto;
+    color: white;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.main-window {
+    height: 100%;
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+.game-log {
+    width: 100%;
+    height: 100%;
+    max-height: 300px;
+    max-width: 300px;
+    border-width: 1px;
+    align-self: flex-start;
+    align-items: center;
+    background-color: var(--bg-dark-2);
+}
+
+.bottom-bar {
+    margin-top: var(--spacing);
+    width: auto;
+    border-width: 1px;
+    /* border-color: red; */
+    flex-direction: row;
+    align-self: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.bottom-bar__icon {
+    color: rgba(8, 20, 30, .7);
+    background-color: transparent;
+    width: auto;
+    min-width: 40px;
+    height: 40px;
+    border-color: rgba(8, 20, 30, .7);
+    border-width: 2px;
+    margin-right: var(--spacing);
+    transition: .2s all ease-in-out;
+}
+
+.bottom-bar__icon:hover {
+    background-color: rgba(8, 20, 30, .7);
+    color: white;
+    border-color: rgba(8, 20, 30, .7);
 }

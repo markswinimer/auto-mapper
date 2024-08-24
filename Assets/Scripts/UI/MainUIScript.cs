@@ -10,6 +10,8 @@ public class MainUI : MonoBehaviour
 
     public static event Action<float> ScaleChanged;
     public static event Action SpinClicked;
+    public static event Action ToggleUnitsMenu;
+    public static event Action ToggleFramesMenu;
 
     void Start() {
         StartCoroutine(Generate());
@@ -32,6 +34,8 @@ public class MainUI : MonoBehaviour
 
         root.styleSheets.Add(_styleSheet);
 
+        var mainWindow = Create("main-window");
+        var topBar = Create("top-bar");
         var gameLog = Create("game-log");
 
         // bottom icons
@@ -40,16 +44,31 @@ public class MainUI : MonoBehaviour
         // that would be useful for seeing the order in the ui and referencing code?
         var bottomBar = Create("bottom-bar");
         
-        string[] bottomButtonData = { "mapButton", "menuButton" };
-        for (int i = 0; i < bottomButtonData.Length; i++)
-        {
-            var icon = Create("bottom-bar__icon",$"bottom-bar__icon-{i + 1}");
-            icon.name = bottomButtonData[i];
-            bottomBar.Add(icon);
-        }
+        // string[] bottomButtonData = { "mapButton", "menuButton" };
+        // for (int i = 0; i < bottomButtonData.Length; i++)
+        // {
+        //     var icon = Create("bottom-bar__icon",$"bottom-bar__icon-{i + 1}");
+        //     icon.name = bottomButtonData[i];
+        //     bottomBar.Add(icon);
+        // }
 
-        root.Add(bottomBar);
-        root.Add(gameLog);
+        var unitsMenu = Create<Button>("units-menu", "bottom-bar__icon", "bottom-bar__icon-1");
+        unitsMenu.name = "units-menu";
+        unitsMenu.text = "Units";
+        unitsMenu.clicked += ToggleUnitsMenu;
+
+        var framesMenu = Create<Button>("frames-menu", "bottom-bar__icon", "bottom-bar__icon-2");
+        framesMenu.name = "frames-menu";
+        framesMenu.text = "Frames";
+        framesMenu.clicked += ToggleFramesMenu;
+
+        bottomBar.Add(unitsMenu);
+        bottomBar.Add(framesMenu);
+
+        root.Add(topBar);
+        root.Add(mainWindow);
+        mainWindow.Add(gameLog);
+        mainWindow.Add(bottomBar);
 
         // example of using tweening engine, still in experimental
        
