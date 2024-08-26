@@ -29,12 +29,11 @@ public class MainUI : MonoBehaviour
     {
         yield return null;
         //actual canvas things are being put on
-        var root = _document.rootVisualElement;
-        root.Clear();
-
-        root.styleSheets.Add(_styleSheet);
+        var _root = _document.rootVisualElement;
+        _root.styleSheets.Add(_styleSheet);
 
         var mainWindow = Create("main-window");
+
         var topBar = Create("top-bar");
         var gameLog = Create("game-log");
 
@@ -43,7 +42,7 @@ public class MainUI : MonoBehaviour
         // consider creating a library to get the id from index
         // that would be useful for seeing the order in the ui and referencing code?
         var bottomBar = Create("bottom-bar");
-        
+
         // string[] bottomButtonData = { "mapButton", "menuButton" };
         // for (int i = 0; i < bottomButtonData.Length; i++)
         // {
@@ -65,13 +64,14 @@ public class MainUI : MonoBehaviour
         bottomBar.Add(unitsMenu);
         bottomBar.Add(framesMenu);
 
-        root.Add(topBar);
-        root.Add(mainWindow);
+        _root.Add(topBar);
+        _root.Add(mainWindow);
         mainWindow.Add(gameLog);
         mainWindow.Add(bottomBar);
 
+        // popup menus
         // example of using tweening engine, still in experimental
-       
+
     }
 
     //helper function to quicken writing and adding elements
@@ -90,4 +90,22 @@ public class MainUI : MonoBehaviour
         }
         return element;
     }
+
+    // these ui menus need to be separaTED OUT but for now im adding all here 
+    // due to an issue with rendering
+
+    // private VisualElement InitializeUnitsMenu()
+    // {
+    //     // Create and configure the units menu
+    //     var unitsMenu = Create("units-menu", "menu-hidden", "ui-menu");
+
+    //     // Populate the menu with content
+    //     var titleLabel = new Label("Units Menu");
+    //     unitsMenu.Add(titleLabel);
+        
+    //     return unitsMenu;
+        
+    //     // Add the menu to the root element
+    // }
 }
+
