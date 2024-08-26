@@ -23,19 +23,15 @@ public class Combatant : MonoBehaviour
 	public List<Gambit> Gambits;
 	public Frame Frame;
 	public Head Head;
+	public string Name;
 	// Start is called before the first frame update
 	void Start()
 	{
 		_battleController = FindFirstObjectByType<BattleController>();
 		_navMeshAgent = GetComponent<NavMeshAgent>();
 		PlaceableObject = GetComponent<PlaceableObject>();
-		if(CombatTeam != Team.Player) ReadyForCombat = true;
+		ReadyForCombat = true;
 		Gambits = new List<Gambit>();
-		if(CombatTeam == Team.Player)
-		{
-			Frame = FindFirstObjectByType<FrameHelper>().SharpShotPrefab.GetComponent<Frame>();
-			Head = FindFirstObjectByType<FrameHelper>().SharpHeadPrefab.GetComponent<Head>();
-		}
 	}
 
 	// Update is called once per frame
@@ -64,14 +60,18 @@ public class Combatant : MonoBehaviour
 		CurrentHp = MaxHp;
 		
 		//TODO: Eventually UI / real requirements, for now just hardcode it
-		var gambitsToAdd = Frame.Gambits.Where(g => CanUseGambit(g)).Select(g => new GambitSlot(g, GambitModifier.None)).ToList();
-		gambitsToAdd.AddRange(Head.Gambits.Where(g => CanUseGambit(g)).Select(g => new GambitSlot(g, GambitModifier.None)).ToList());
+		var gambitsToAdd = Frame.Gambits.Where(g => CanUseGambit(g)).ToList();
+		gambitsToAdd.AddRange(Head.Gambits.Where(g => CanUseGambit(g)).ToList());
 		gambitsToAdd = gambitsToAdd.Take(Frame.GambitSlotCount).ToList();
-		gambitsToAdd.ForEach(g => g.ModfiyGambit());
+		Gambits = new List<Gambit>();
+		Frame.GambitSlots = new List<GambitSlot>();
 		foreach(var gambit in gambitsToAdd)
 		{
-			Gambits.Add(Instantiate(gambit.Gambit, transform));
+			Frame.GambitSlots.Add(new GambitSlot(gambit, GambitModifier.None));
 		}
+		Frame.GambitSlots.ForEach(g => g.ModfiyGambit());
+		Gambits.AddRange(Frame.GambitSlots.Select(g => Instantiate(g.Gambit, transform)));
+		Gambits.ForEach(g => g.IsEquipped = true);
 	}
 	
 	public void StopFighting()
@@ -104,6 +104,7 @@ public class Combatant : MonoBehaviour
 					GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
 					Debug.Log($"gambit="+gambit.GetType().Name);
 					gambit.HandleParticles(_target.transform);
+					if(gambit.CastTime != 0) yield return new WaitForSeconds(gambit.CastTime);
 					yield return new WaitForSeconds(_battleController.GambitDelay);
 					gambit.ActivateBase(this, _target);
 					GetComponentInChildren<MeshRenderer>().material.color = Frame.Color;

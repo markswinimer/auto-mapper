@@ -51,6 +51,11 @@ MonoBehaviour:
   RequiredWeaponTypes: 
   HasParticleEffects: 1
   ParticleSystemDuration: 0.5
+  CastTime: 0
+  IsEquipped: 0
+  SkillIcon: {fileID: 21300000, guid: 4e9f6fcd9cf1e6f439ddc4ddf2937d77, type: 3}
+  Name: Attack
+  Description: Attack an enemy with your weapon
 --- !u!1001 &1253943231162656613
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -58,3 +58,5 @@ MonoBehaviour:
   BlockDamageReductionPercentage: 0
   MoveSpeed: 1
   Range: 3
+  GambitSlotCount: 4
+  Name: Broken

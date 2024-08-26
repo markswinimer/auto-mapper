@@ -7,6 +7,7 @@ public abstract class Head : MonoBehaviour
 	public Color Color;
 	public List<Gambit> Gambits;
 	public int BaseHp;
+	public string Name;
 	
 	// Start is called before the first frame update
 	void Start()

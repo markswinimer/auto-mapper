@@ -58,3 +58,5 @@ MonoBehaviour:
   BlockDamageReductionPercentage: 0.5
   MoveSpeed: 1.5
   Range: 3
+  GambitSlotCount: 4
+  Name: ValorEdge Frame

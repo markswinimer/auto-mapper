@@ -11,6 +11,11 @@ public abstract class Gambit : MonoBehaviour
 	public bool HasParticleEffects;
 	public float ParticleSystemDuration;
 	private GambitParticleEffect _gambitParticleEffect;
+	public int CastTime;
+	public bool IsEquipped;
+	public Sprite SkillIcon;
+	public string Name;
+	public string Description;
 	
 	// Start is called before the first frame update
 	void Awake()

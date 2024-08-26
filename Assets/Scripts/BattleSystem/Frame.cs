@@ -15,12 +15,15 @@ public abstract class Frame : MonoBehaviour
 	public float MoveSpeed;
 	public float Range;
 	public int GambitSlotCount = 4;
+	public List<GambitSlot> GambitSlots;
+	public string Name;
 	
 	// Start is called before the first frame update
 	void Start()
 	{
 		Color = Color.gray;
 		Gambits = new List<Gambit>();
+		GambitSlots = new List<GambitSlot>();
 	}
 
 	// Update is called once per frame
