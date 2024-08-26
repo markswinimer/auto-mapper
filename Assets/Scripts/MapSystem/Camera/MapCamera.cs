@@ -4,76 +4,105 @@ using UnityEngine;
 public class MapCamera : MonoBehaviour
 {
     public static MapCamera instance;
-    // put logic here for adjusting cenemachine camera
-    // currently settings are handled on cinemachine object
-    // camera tracks camera target and that is moved by grid script
-    [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
-    private MapCameraTarget _mapCameraTarget;
 
-    private float targetFieldOfView = 50f;
-    private float fieldOfViewMinimum = 10f;
-    private float fieldOfViewMaximum = 100f;
+    [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
+
+    private Vector2Int _mapWorldDimensions;
+    private Vector3 initialCameraPosition;
+    private float initialOrthographicSize;
+
+    private float targetOrthographicSize;
+    private Vector3 targetCameraPosition;
+
+    private float zoomSpeed = 5f;
+    private float zoomMomentum = 0f;
+    private float positionLerpSpeed = 10f;
+
+    private bool zoomingIsFixed = false;
+    private Vector3 _cursorWorldPosition;
 
     void Awake()
     {
         instance = this;
     }
-    
-    private void Update() {
+
+    public void SetupIsometricCamera()
+    {
+        _mapWorldDimensions = Map.Instance.MapWorldDimensions;
+
+        // Ensure the camera is set to orthographic mode
+        cinemachineVirtualCamera.m_Lens.Orthographic = true;
+
+        // Set the isometric angle with the preferred X rotation
+        var cameraTransform = cinemachineVirtualCamera.transform;
+        cameraTransform.rotation = Quaternion.Euler(-315f, 45f, 0f);
+
+        // Calculate the orthographic size to fit the entire map's height as a diamond
+        float mapSize = _mapWorldDimensions.x;
+        initialOrthographicSize = mapSize / 2f * 1.2f;
+        cinemachineVirtualCamera.m_Lens.OrthographicSize = initialOrthographicSize;
+
+        // Position the camera directly above the map center, adjusted for the isometric angle
+        Vector3 cameraOffset = new Vector3(0, initialOrthographicSize * Mathf.Sqrt(2), 0);
+        initialCameraPosition = new Vector3(-1, cameraOffset.y, -1);
+        cameraTransform.position = initialCameraPosition;
+
+        // Initialize the target values
+        targetOrthographicSize = initialOrthographicSize;
+        targetCameraPosition = initialCameraPosition;
+    }
+
+    void Update()
+    {
         HandleCameraZoom();
     }
 
-    public void SetCameraFollow(Transform target)
+    private void HandleCameraZoom()
     {
-        // cinemachineVirtualCamera.Follow = target;
-    }
+        float scrollInput = Input.mouseScrollDelta.y;
 
-
-    private void HandleCameraZoom() {
-        float fieldOfViewIncreaseAmount = 5f;
-
-        if ( Input.mouseScrollDelta.y < 0 )
+        if (Mathf.Abs(scrollInput) > 0.01f)
         {
-            targetFieldOfView += fieldOfViewIncreaseAmount;
-        }
-        if ( Input.mouseScrollDelta.y > 0 )
-        {
-            targetFieldOfView -= fieldOfViewIncreaseAmount;
+            // Adjust zoom momentum based on scroll input
+            zoomMomentum += scrollInput * zoomSpeed;
         }
 
-        targetFieldOfView = Mathf.Clamp(targetFieldOfView, fieldOfViewMinimum, fieldOfViewMaximum);
+        // Apply zoom momentum
+        targetOrthographicSize -= zoomMomentum;
+        targetOrthographicSize = Mathf.Clamp(targetOrthographicSize, initialOrthographicSize / 2, initialOrthographicSize * 2);
 
-        float zoomSpeed = 3f;
+        // Convert cursor position to world position
+        Vector3 mousePosition = Input.mousePosition;
 
-        // smooths the scroll between the two values
-        cinemachineVirtualCamera.m_Lens.FieldOfView = 
-            Mathf.Lerp(cinemachineVirtualCamera.m_Lens.FieldOfView, targetFieldOfView, Time.deltaTime * zoomSpeed);
-    }
-    public void SetCameraTargetPosition(Vector2Int dimensions)
-    {
-        // Adjust the z position by subtracting a fraction of the bounds' depth
-        // offsetPosition.z -= southwardOffsetFactor * bounds.size.z;
-        // Set the camera target position
-        GameObject mapCameraTarget = new GameObject("MapCameraTarget");
-        // consider breaking this into a map script init function 
-        // Add the Map script to the new GameObject
-        print("map > > " + mapCameraTarget.transform.eulerAngles.y); // Prints the Y rotation in degrees (initially 0)
-        _mapCameraTarget = mapCameraTarget.AddComponent<MapCameraTarget>();
-        mapCameraTarget.transform.rotation = Quaternion.Euler(0, -180, 0);
-        print("map > > " + mapCameraTarget.transform.eulerAngles.y); // Should print 210
-
-        // Add the Grid component to the same GameObject
-
-        if (mapCameraTarget != null)
+        if (!zoomingIsFixed)
         {
-            // mapCameraTarget.ScaleToGridSize(dimensions);
-            cinemachineVirtualCamera.Follow = _mapCameraTarget.transform;
-            cinemachineVirtualCamera.LookAt = _mapCameraTarget.transform;
-            _mapCameraTarget.MoveToPosition();
+            _cursorWorldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, -Camera.main.transform.position.y));
         }
-        else
+
+        // Determine the target position based on whether zooming in or out
+        if (zoomMomentum > 0) // Zoom in
         {
-            Debug.LogError("Camera Target Controller is not assigned!");
+            zoomingIsFixed = true;
+            targetCameraPosition = Vector3.Lerp(targetCameraPosition, _cursorWorldPosition, 0.1f);
         }
+        else if (zoomMomentum < 0) // Zoom out
+        {
+            zoomingIsFixed = false;
+            targetCameraPosition = Vector3.Lerp(targetCameraPosition, initialCameraPosition, 0.1f);
+
+            // Force reset orthographic size and camera position when zooming out reaches near the initial values
+            if (targetOrthographicSize >= initialOrthographicSize * 0.99f)
+            {
+                targetOrthographicSize = initialOrthographicSize;
+                targetCameraPosition = initialCameraPosition;
+            }
+        }
+
+        // Apply the target orthographic size and position smoothly
+        cinemachineVirtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(cinemachineVirtualCamera.m_Lens.OrthographicSize, targetOrthographicSize, Time.deltaTime * positionLerpSpeed);
+        cinemachineVirtualCamera.transform.position = Vector3.Lerp(cinemachineVirtualCamera.transform.position, targetCameraPosition, Time.deltaTime * positionLerpSpeed);
+
+        // Decay the zoom momentum over time for smooth stop
+        zoomMomentum = Mathf.Lerp(zoomMomentum, 0f, Time.deltaTime * positionLerpSpeed);
     }
 }

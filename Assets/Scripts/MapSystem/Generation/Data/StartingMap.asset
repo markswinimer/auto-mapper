@@ -12,18 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63fb3d7cd3ed29444ad038846a31d40b, type: 3}
   m_Name: StartingMap
   m_EditorClassIdentifier: 
-  MapSize: {x: 8, y: 8}
-  TileSize: {x: 10, y: 1, z: 5}
+  MapSize: {x: 7, y: 7}
+  TileSize: {x: 5, y: 1, z: 5}
   mapTiles:
-  - tileAmount: 26
+  - tileAmount: 15
     tileType: 3
     tilePrefabs:
     - {fileID: 8967683749754070180, guid: 0b38b8c5e9e9acb4a8181a749914bc2b, type: 3}
-  - tileAmount: 20
+  - tileAmount: 17
     tileType: 2
     tilePrefabs:
     - {fileID: 8039717125145593021, guid: 323e89c0f7e0d7140b1bc4aaebcb65b4, type: 3}
-  - tileAmount: 20
+  - tileAmount: 17
     tileType: 4
     tilePrefabs:
     - {fileID: 4059525417229984846, guid: aaac9e57e4df8504d89afb9eb420d911, type: 3}

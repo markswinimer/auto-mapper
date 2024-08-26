@@ -107,7 +107,7 @@ public class MapManager : MonoBehaviour
 
     private void ConfigMapCamera()
     {
-        mapCamera.SetCameraTargetPosition(map.MapWorldDimensions);
+        mapCamera.SetupIsometricCamera();
     }
 
     private void CreatePlayerOnMap()
