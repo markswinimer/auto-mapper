@@ -1,9 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="LeftSide" style="flex-grow: 1; width: 25%; height: 75%; top: auto; flex-direction: column-reverse;">
-        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="mapLog" style="max-height: 500px; color: rgb(255, 255, 255);" />
-    </ui:VisualElement>
-    <ui:VisualElement name="VisualElement" style="flex-grow: 1; flex-direction: row; justify-content: flex-start; align-self: flex-start; align-items: auto; height: 10%; width: 100%;">
-        <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonMenu" />
-        <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ButtonHelp" />
-    </ui:VisualElement>
-</ui:UXML>

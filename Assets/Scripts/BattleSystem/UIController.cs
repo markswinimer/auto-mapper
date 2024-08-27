@@ -1,18 +1,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class UIController : MonoBehaviour
 {
+
+	[SerializeField] EquipView equipView;
 	private PlayerInventory _playerInventory;
 	private PlayerRobot _playerRobot;
+
+	private int _capacity = 10;
+
 	private void Start() {
 		_playerInventory = FindFirstObjectByType<PlayerInventory>();
 		_playerRobot = FindFirstObjectByType<PlayerRobot>();
 	}
-	
+
+	void UpdateSlots()
+	{
+		var data = GetUIData();
+		var gambits = data.Gambits;
+		print("count - " + gambits.Count);
+
+		for (int i = 0; i <= gambits.Count; i++)
+		{
+			var gambit = gambits[i];
+			print(gambit);
+			if (gambit == null)
+			{
+				equipView.Slots[i].Set("", null, false);
+			}
+			else
+			{
+				equipView.Slots[i].Set(gambit.Name, gambit.SkillIcon, gambit.IsEquipped);
+			}
+		}
+	}
+
 	private void Update() {
-		if(Input.GetKeyDown(KeyCode.P))
+		UpdateSlots();
+
+		if (Input.GetKeyDown(KeyCode.P))
 		{
 			var data = GetUIData();
 			var printData = "Frames = " + string.Join(',', data.Frames.Select(f => f.Name));

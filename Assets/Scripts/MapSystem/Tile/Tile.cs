@@ -52,18 +52,6 @@ public class Tile : MonoBehaviour, IInteractable
             _targetRotation, Time.deltaTime * 5);
     }
 
-    private void OnEnable() 
-    {
-        MainUI.ScaleChanged += OnScaleChanged;
-        MainUI.SpinClicked += MainUIOnSpinClicked;
-    }
-
-    private void OnDisable() 
-    {
-        MainUI.ScaleChanged -= OnScaleChanged;
-        MainUI.SpinClicked -= MainUIOnSpinClicked;
-    }
-
     void OnScaleChanged(float newScale)
     {
         _targetScale = newScale;

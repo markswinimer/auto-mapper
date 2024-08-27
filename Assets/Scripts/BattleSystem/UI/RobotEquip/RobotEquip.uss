@@ -1,0 +1,81 @@
+:root {
+    width: 100%;
+    height: 100%;
+}
+.container {
+    flex-grow: 1;
+    width: auto;
+    height: auto;
+    max-width: none;
+    max-height: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+    color: rgb(255,197,0);
+}
+
+.inventory {
+    background-color: silver;
+    width: 300px;
+    max-height: 500px;
+    padding: 10px;
+}
+
+Label {
+    font-size: 24px;
+
+}
+.inventoryHeader {
+    position: absolute;
+    top: -32px;
+    left: -27px;
+    width: 350px;
+    height: 70px;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+    -unity-slice-scale: 0.5
+}
+
+.slotsContainer {
+    flex-grow: 1;
+    padding-top: 30px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+}
+
+.slot {
+    width: 60px;
+    height: 60px;
+    margin: 4px;
+}
+
+.slotFrame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    border-width: 1px;
+    border-color: white;
+    -unity-slice-scale: 0.8;
+}
+
+.slotIcon {
+    padding: 4px;
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+
+.ghostIcon {
+    position: absolute;
+    visibility: hidden;
+    width: 60px;
+    height: 60px;
+    background-image: none;
+}
